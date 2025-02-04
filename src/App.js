@@ -10,6 +10,7 @@ function App() {
       <DatePicker />
     </div>
   );
+  
 }
 
 export default App;
