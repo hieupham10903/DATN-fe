@@ -1,16 +1,21 @@
 import React from 'react';
-import './App.css';
-import { Button, DatePicker } from 'antd';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './main/reducers.ts';
+import EmployeeList from './main/employee/employee-list.tsx';
+import HomePage from './main/home/homepage.tsx';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>React with Ant Design</h1>
-      <Button type="primary">Click me</Button>
-      <DatePicker />
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/employee-list" element={<EmployeeList />} />
+        </Routes>
+      </Router>
+    </Provider>
   );
-  
-}
+};
 
 export default App;
