@@ -10,7 +10,7 @@ const EmployeeList = () => {
 
     useEffect(() => {
         GetEmployees();
-    },[])
+    },[]) 
 
     const columns = [
         {
