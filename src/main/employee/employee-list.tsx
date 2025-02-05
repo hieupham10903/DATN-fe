@@ -32,7 +32,10 @@ const EmployeeList = () => {
             title: 'Hành động',
             key: 'action',
             render: (_, record) => (
-                <Button type="link" onClick={() => console.log(record)}>Xem chi tiết</Button>
+                <>
+                    <Button className="ant-btn edit" onClick={() => console.log('Chỉnh sửa:', record)}>Chỉnh sửa</Button>
+                    <Button className="ant-btn delete" onClick={() => console.log('Xóa:', record)}>Xóa</Button>
+                </>
             ),
         },
     ];
