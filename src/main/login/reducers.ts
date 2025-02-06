@@ -3,6 +3,7 @@ import axios from "axios";
 
 const initialState = {
   isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
+  registerSuccess : false
 };
 
 export const login = createAsyncThunk(
@@ -10,6 +11,14 @@ export const login = createAsyncThunk(
   async (body: any) => {
     localStorage.setItem("isAuthenticated", "true");
     const response = await axios.post<any>('/api/auth/login', body);
+    return response.data;
+  }
+);
+
+export const register = createAsyncThunk(
+  'user/register',
+  async (body: any) => {
+    const response = await axios.post<any>('/api/auth/register', body);
     return response.data;
   }
 );
@@ -36,6 +45,15 @@ const userReducer = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.isAuthenticated = false;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.registerSuccess = true;
+      })
+      .addCase(register.pending, (state, action) => {
+        state.registerSuccess = false;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.registerSuccess = false;
       })
   },
 });

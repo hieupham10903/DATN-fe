@@ -1,25 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, message, Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
 import UserHook from "./index.ts";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import logo from "../../picture/logo.png";
-import { toast } from "react-toastify";
 
 const AuthForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { Login, Register } = UserHook();
+    const { Login, Register, registerSuccess } = UserHook();
     const [loginType, setLoginType] = useState('login');
 
     const onLoginFinish = async (values) => {
         setLoading(true);
         try {
             await Login(values);
-            toast.success("Đăng nhập thành công!");
             navigate("/"); 
-        } catch (error) {
-            message.error("Đăng nhập thất bại!");
         } finally {
             setLoading(false);
         }
@@ -29,14 +25,14 @@ const AuthForm = () => {
         setLoading(true);
         try {
             await Register(values);
-            message.success("Đăng ký thành công!");
-            navigate("/login");
-        } catch (error) {
-            message.error("Đăng ký thất bại!");
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        registerSuccess && setLoginType('login')
+    },[registerSuccess])
 
     return (
         <div className="form-container">
