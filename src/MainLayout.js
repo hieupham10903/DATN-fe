@@ -98,20 +98,31 @@ const MainLayout = ({ children }) => {
 
                 <div
                     className="avatar-container"
-                    style={{ display: "flex", alignItems: "center", cursor: "pointer"}}
+                    style={{ display: "flex", alignItems: "center", cursor: "pointer", paddingRight: "10px" }}
                 >
                     <Dropdown overlay={menu} trigger={['hover']}>
-                        <img
-                            src={avatar}
-                            alt="Avatar"
+                        <div
                             style={{
                                 width: 40,
                                 height: 40,
                                 borderRadius: "50%",
                                 border: "2px solid #fff",
-                                objectFit: "cover",
+                                overflow: "hidden",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
                             }}
-                        />
+                        >
+                            <img
+                                src={avatar}
+                                alt="Avatar"
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                }}
+                            />
+                        </div>
                     </Dropdown>
                 </div>
             </Header>

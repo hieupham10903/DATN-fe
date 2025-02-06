@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../main/reducers";
-import { setAuth, logout } from "./reducers.ts";
+import { setAuth, logout, login } from "./reducers.ts";
 
 const UserHook = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -15,10 +15,20 @@ const UserHook = () => {
         dispatch(logout());
     }
 
+    const Login = async (body : any) => {
+        await dispatch(login(body));
+    };
+
+    const Register = async (body : any) => {
+        await dispatch(login(body));
+    };
+
     return {
         isAuthenticated,
         SetAuth,
-        Logout
+        Logout,
+        Login,
+        Register
     }
 };
 export default UserHook;

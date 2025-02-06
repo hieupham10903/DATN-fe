@@ -1,41 +1,130 @@
 import React, { useState } from "react";
+import { Form, Input, Button, message, Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button } from "antd";
 import UserHook from "./index.ts";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import logo from "../../picture/logo.png";
+import { toast } from "react-toastify";
 
-const Login = () => {
+const AuthForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { Login, Register } = UserHook();
+    const [loginType, setLoginType] = useState('login');
 
-    const {
-        SetAuth
-    } = UserHook();
-
-    const onFinish = (values) => {
+    const onLoginFinish = async (values) => {
         setLoading(true);
+        try {
+            await Login(values);
+            toast.success("Đăng nhập thành công!");
+            navigate("/"); 
+        } catch (error) {
+            message.error("Đăng nhập thất bại!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        // Giả lập đăng nhập (Bạn có thể thay bằng API thật)
-        setTimeout(() => {
-            SetAuth();
-            localStorage.setItem("isAuthenticated", "true");
-            navigate("/");
-        }, 1000);
+    const onRegisterFinish = async (values) => {
+        setLoading(true);
+        try {
+            await Register(values);
+            message.success("Đăng ký thành công!");
+            navigate("/login");
+        } catch (error) {
+            message.error("Đăng ký thất bại!");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
-        <div className="login-container">
-            <h2>Đăng nhập</h2>
-            <Form onFinish={onFinish} layout="vertical">
-                <Form.Item label="Tài khoản" name="username" rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item label="Mật khẩu" name="password" rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}>
-                    <Input.Password />
-                </Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading}>Đăng nhập</Button>
-            </Form>
+        <div className="form-container">
+            <div className="logo-login-container">
+                <img
+                    src={logo}
+                    alt="Logo"
+                    style={{ width: 100, height: 100 }}
+                />                
+                <h2>Đăng nhập</h2>
+            </div>
+            <Tabs activeKey={loginType} onChange={setLoginType} centered>
+                <Tabs.TabPane key="login" tab="Đăng nhập">
+                    <Form onFinish={onLoginFinish} layout="vertical">
+                        <Form.Item
+                            label="Tài khoản"
+                            name="username"
+                            rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}
+                        >
+                            <Input prefix={<UserOutlined />} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Mật khẩu"
+                            name="password"
+                            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+                        >
+                            <Input.Password prefix={<LockOutlined />} />
+                        </Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading} block>
+                            Đăng nhập
+                        </Button>
+                    </Form>
+                    <div className="register-link">
+                        <p>
+                            Chưa có tài khoản?{" "}
+                            <a onClick={() => setLoginType('register')}>Đăng ký ngay</a>
+                        </p>
+                    </div>
+                </Tabs.TabPane>
+
+                <Tabs.TabPane key="register" tab="Đăng ký">
+                    <Form onFinish={onRegisterFinish} layout="vertical">
+                        <Form.Item
+                            label="Tài khoản"
+                            name="username"
+                            rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}
+                        >
+                            <Input prefix={<UserOutlined />} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Mật khẩu"
+                            name="password"
+                            rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+                        >
+                            <Input.Password prefix={<LockOutlined />} />
+                        </Form.Item>
+                        <Form.Item
+                            label="Xác nhận mật khẩu"
+                            name="confirmPassword"
+                            dependencies={['password']}
+                            rules={[
+                                { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('Mật khẩu không khớp!'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password prefix={<LockOutlined />} />
+                        </Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading} block>
+                            Đăng ký
+                        </Button>
+                    </Form>
+                    <div className="login-link">
+                        <p>
+                            Đã có tài khoản?{" "}
+                            <a onClick={() => setLoginType('login')}>Đăng nhập ngay</a>
+                        </p>
+                    </div>
+                </Tabs.TabPane>
+            </Tabs>
         </div>
     );
 };
 
-export default Login;
+export default AuthForm;
