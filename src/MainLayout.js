@@ -1,15 +1,22 @@
 import React, { useState } from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Dropdown, Space, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { MenuOutlined } from "@ant-design/icons";
 import logo from './picture/logo.png';
+import avatar from './picture/avatar.png';
+import UserHook from "./main/login/index.ts";
 
 const { Header, Content, Sider } = Layout;
 
 const MainLayout = ({ children }) => {
-    const navigate = useNavigate(); 
-    const [selectedMenu, setSelectedMenu] = useState("home"); 
-    const [collapsed, setCollapsed] = useState(false); 
+    const navigate = useNavigate();
+    const [selectedMenu, setSelectedMenu] = useState("home");
+    const [collapsed, setCollapsed] = useState(false);
+
+    const {
+        Logout,
+        isAuthenticated
+    } = UserHook();
 
     const handleLogoClick = () => {
         navigate('/');
@@ -22,6 +29,21 @@ const MainLayout = ({ children }) => {
     const toggleSider = () => {
         setCollapsed(!collapsed);
     };
+
+    const handleLogout = () => {
+        Logout();
+    };
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="profile">
+                <Link to="/profile">Sửa thông tin</Link>
+            </Menu.Item>
+            <Menu.Item key="logout" onClick={handleLogout}>
+                Đăng xuất
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
@@ -73,12 +95,31 @@ const MainLayout = ({ children }) => {
                         <Link to="/about">Giới thiệu</Link>
                     </Menu.Item>
                 </Menu>
+
+                <div
+                    className="avatar-container"
+                    style={{ display: "flex", alignItems: "center", cursor: "pointer"}}
+                >
+                    <Dropdown overlay={menu} trigger={['hover']}>
+                        <img
+                            src={avatar}
+                            alt="Avatar"
+                            style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "50%",
+                                border: "2px solid #fff",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </Dropdown>
+                </div>
             </Header>
 
             <Layout style={{ marginTop: 64 }}>
                 <Sider
                     width={200}
-                    collapsed={collapsed} 
+                    collapsed={collapsed}
                     onCollapse={(collapsed) => setCollapsed(collapsed)}
                     style={{ background: "#fff" }}
                 >
