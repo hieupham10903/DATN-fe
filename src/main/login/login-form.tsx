@@ -3,7 +3,7 @@ import { Form, Input, Button, message, Tabs } from "antd";
 import { useNavigate } from "react-router-dom";
 import UserHook from "./index.ts";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import logo from "../../picture/logo.png";
+import logo from "../../picture/logo.png"; //kệ nó
 
 const AuthForm = () => {
     const [loading, setLoading] = useState(false);

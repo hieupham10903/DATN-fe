@@ -4,19 +4,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const API_URL = "http://localhost:8080/api";
 
 const initialState = {
-  employees: [],
+  listEmployee: [],
+  totalEmployee: 0,
   employee: undefined,
   loading: false,
   error: null,
 };
 
-export const getEmployees = createAsyncThunk(
-  'employee/getEmployees',
-  async () => {
-    const response = await axios.post('/api/get-all-employee');  
-    return response.data;
-  }
-);
+const apiSearchEmployee = '/api/search-employee';
+
+export const searchEmployee = createAsyncThunk(
+  'employee/searchEmployee',
+  async ({ query, bodyRep }: any) => {
+    const requestUrl = `${apiSearchEmployee}?${query}`;
+    const response = await axios.post<any>(requestUrl, bodyRep);
+    return response;
+  });
 
 export const getEmployeeById = createAsyncThunk(
   'employee/getEmployeeById',
@@ -60,13 +63,11 @@ const employeeReducer = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getEmployees.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getEmployees.fulfilled, (state, action) => {
-        state.loading = false;
-        state.employees = action.payload;
+      .addCase(searchEmployee.fulfilled, (state, action) => {
+        state.listEmployee = action.payload.data;
+        state.totalEmployee = action.payload.headers
+          ? parseInt(action.payload.headers['x-total-count'], 10) || 0
+          : 0;
       })
       .addCase(getEmployeeById.fulfilled, (state, action) => {
         state.employee = action.payload;
