@@ -158,11 +158,11 @@ body {
 $green-color: #4CAF50; // Màu xanh lá cây (Thêm mới)
 $blue-color: #2196F3; // Màu xanh nước biển (Chỉnh sửa)
 $red-color: #D32F2F; // Màu đỏ (Xóa)
-$yellow-color: #FFEB3B; // Màu vàng (Tìm kiếm)
+$yellow-color: #ffe600; // Màu vàng (Tìm kiếm)
 
 // 📌 Nút Thêm Mới (Green)
-button.add-new,
-.ant-btn.add-new {
+button.new,
+.ant-btn.new {
     background-color: $green-color !important;
     color: $text-color !important;
     
@@ -250,21 +250,6 @@ button,
     transition: 0.3s ease-in-out;
 }
 
-
-// 📌 Input
-input {
-    padding: 10px;
-    border: 1px solid lighten($primary-color, 40%);
-    border-radius: $border-radius;
-    outline: none;
-    transition: 0.3s;
-
-    &:focus {
-        border-color: $primary-color;
-        box-shadow: 0px 0px 5px rgba($primary-color, 0.5);
-    }
-}
-
 /* CSS cho form */
 .form-container {
     background-color: white;
@@ -288,17 +273,22 @@ h2 {
     font-weight: 500;
 }
 
-.ant-input, .ant-input-password {
-    border-radius: $border-radius;
-    padding: 10px;
-    border: 1px solid lighten($primary-color, 40%);
+/* Đảm bảo Input và Select có chiều rộng ngang nhau */
+input.ant-input,
+select.ant-select {
+    width: 100%; /* Đảm bảo độ rộng 100% */
+    border-radius: $border-radius; /* Bo góc */
+    border: 1px solid lighten($primary-color, 40%); /* Viền sáng */
+    outline: none;
     transition: 0.3s;
-
-    &:focus {
-        border-color: $primary-color;
-        box-shadow: 0px 0px 5px rgba($primary-color, 0.5);
-    }
 }
+
+input.ant-input:focus,
+select.ant-select:focus {
+    border-color: $primary-color;
+    box-shadow: 0px 0px 5px rgba($primary-color, 0.5); /* Hiệu ứng khi focus */
+}
+
 
 .ant-btn {
     width: 100%;
