@@ -7,11 +7,12 @@ const initialState = {
   listEmployee: [],
   totalEmployee: 0,
   employee: undefined,
-  loading: false,
   error: null,
+  updateSuccess : false,
 };
 
 const apiSearchEmployee = '/api/search-employee';
+const apiCreateEmployee = '/api/create-employee';
 
 export const searchEmployee = createAsyncThunk(
   'employee/searchEmployee',
@@ -21,41 +22,12 @@ export const searchEmployee = createAsyncThunk(
     return response;
   });
 
-export const getEmployeeById = createAsyncThunk(
-  'employee/getEmployeeById',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_URL}/get-employee-by-id`, { id });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
 export const createEmployee = createAsyncThunk(
   'employee/createEmployee',
-  async (employee, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_URL}/create-employee`, employee);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const updateEmployee = createAsyncThunk(
-  'employee/updateEmployee',
-  async (employee, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_URL}/update-employee`, employee);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+  async (body : any) => {
+    const response = await axios.post<any>(apiCreateEmployee, body);
+    return response;
+  });
 
 const employeeReducer = createSlice({
   name: 'employeeReducer',
@@ -69,8 +41,14 @@ const employeeReducer = createSlice({
           ? parseInt(action.payload.headers['x-total-count'], 10) || 0
           : 0;
       })
-      .addCase(getEmployeeById.fulfilled, (state, action) => {
-        state.employee = action.payload;
+      .addCase(createEmployee.fulfilled, (state, action) => {
+        state.updateSuccess = true;
+      })
+      .addCase(createEmployee.pending, (state, action) => {
+        state.updateSuccess = false;
+      })
+      .addCase(createEmployee.rejected, (state, action) => {
+        state.updateSuccess = false;
       })
   },
 });

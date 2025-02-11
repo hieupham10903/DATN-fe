@@ -10,13 +10,14 @@ const EmployeeList = () => {
     const {
         GetDataSearch,
         listEmployee,
-        totalEmployee
+        totalEmployee,
+        updateSuccess
     } = EmployeeHook();
 
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
-        sort: 'name,asc',
+        sort: 'code,asc',
         dataSearch: {}
     });
 
@@ -40,6 +41,10 @@ const EmployeeList = () => {
     useEffect(() => {
         GetDataSearch(pagination);
     }, [pagination]);
+
+    useEffect(() => {
+        updateSuccess && GetDataSearch(pagination);
+    }, [updateSuccess]);
 
     useEffect(() => {
         if (ObjectTypeEmployee[searchField] === 'select') {
@@ -77,6 +82,7 @@ const EmployeeList = () => {
 
         setPagination(prev => ({
             ...prev,
+            current: 1,
             dataSearch: searchCriteria
         }));
     };
@@ -102,6 +108,12 @@ const EmployeeList = () => {
             }
         },
         {
+            title: 'Mã nhân viên',
+            dataIndex: 'code',
+            key: 'code',
+            align: 'center',
+        },
+        {
             title: 'Tên nhân viên',
             dataIndex: 'name',
             key: 'name',
@@ -109,9 +121,12 @@ const EmployeeList = () => {
         },
         {
             title: 'Chức vụ',
-            dataIndex: 'position',
-            key: 'position',
+            dataIndex: 'role',
+            key: 'role',
             align: 'center',
+            render(position) {
+                return position ? role[position] : '';
+            }
         },
         {
             title: 'Email',

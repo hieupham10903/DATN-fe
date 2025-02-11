@@ -278,7 +278,7 @@ input.ant-input,
 select.ant-select {
     width: 100%; /* Đảm bảo độ rộng 100% */
     border-radius: $border-radius; /* Bo góc */
-    border: 1px solid lighten($primary-color, 40%); /* Viền sáng */
+    border: 1px solid darken($primary-color, 40%); /* Viền tối */
     outline: none;
     transition: 0.3s;
 }
@@ -288,7 +288,6 @@ select.ant-select:focus {
     border-color: $primary-color;
     box-shadow: 0px 0px 5px rgba($primary-color, 0.5); /* Hiệu ứng khi focus */
 }
-
 
 .ant-btn {
     width: 100%;
