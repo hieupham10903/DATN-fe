@@ -1,36 +1,46 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../main/reducers";
-import { setAuth, logout, login, register } from "./reducers.ts";
+import { chatBot, login, logout, register, setAuth } from "./reducers.ts";
 
 const UserHook = () => {
-    const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
 
-    const isAuthenticated = useSelector((state: RootState) => state.user.isAuthenticated);
-    const registerSuccess = useSelector((state: RootState) => state.user.registerSuccess);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
+  const registerSuccess = useSelector(
+    (state: RootState) => state.user.registerSuccess
+  );
 
-    const SetAuth = () => {
-        dispatch(setAuth(true));
-    }
+  const SetAuth = () => {
+    dispatch(setAuth(true));
+  };
 
-    const Logout = () => {
-        dispatch(logout());
-    }
+  const Logout = () => {
+    dispatch(logout());
+  };
 
-    const Login = async (body : any) => {
-        await dispatch(login(body));
-    };
+  const Login = async (body: any) => {
+    await dispatch(login(body));
+  };
 
-    const Register = async (body : any) => {
-        await dispatch(register(body));
-    };
+  const Register = async (body: any) => {
+    await dispatch(register(body));
+  };
 
-    return {
-        isAuthenticated,
-        SetAuth,
-        Logout,
-        Login,
-        Register,
-        registerSuccess
-    }
+  const ChatBotReply = async (body: any) => {
+    const response = await dispatch(chatBot(body));
+    return response;
+  };
+
+  return {
+    isAuthenticated,
+    SetAuth,
+    Logout,
+    Login,
+    Register,
+    registerSuccess,
+    ChatBotReply,
+  };
 };
 export default UserHook;

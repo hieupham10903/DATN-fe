@@ -1,10 +1,22 @@
+import {
+    MenuOutlined,
+    MessageOutlined
+} from "@ant-design/icons";
+import {
+    Button,
+    Dropdown,
+    FloatButton,
+    Input,
+    Layout,
+    List,
+    Menu,
+    Modal
+} from "antd";
 import React, { useState } from "react";
-import { Layout, Menu, Dropdown, Space, Modal } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { MenuOutlined } from "@ant-design/icons";
-import logo from './picture/logo.png';
-import avatar from './picture/avatar.png';
 import UserHook from "./main/login/index.ts";
+import avatar from './picture/avatar.png';
+import logo from './picture/logo.png';
 
 const { Header, Content, Sider } = Layout;
 
@@ -13,10 +25,7 @@ const MainLayout = ({ children }) => {
     const [selectedMenu, setSelectedMenu] = useState("home");
     const [collapsed, setCollapsed] = useState(false);
 
-    const {
-        Logout,
-        isAuthenticated
-    } = UserHook();
+    const { Logout, ChatBotReply } = UserHook();
 
     const handleLogoClick = () => {
         navigate('/');
@@ -44,6 +53,43 @@ const MainLayout = ({ children }) => {
             </Menu.Item>
         </Menu>
     );
+
+    const [chatVisible, setChatVisible] = useState(false);
+    const [chatInput, setChatInput] = useState("");
+    const [chatMessages, setChatMessages] = useState([]);
+
+    const toggleChatModal = () => {
+        setChatVisible(!chatVisible);
+    };
+
+    const handleSendMessage = () => {
+        if (!chatInput.trim()) return;
+    
+        ChatBotReply({
+            message: chatInput
+        }).then((data) => {
+            const botReply = data.payload.reply;
+    
+            const newMessages = [
+                ...chatMessages,
+                { role: "user", content: chatInput },
+                { role: "assistant", content: "Đang xử lý..." },
+            ];
+            setChatMessages(newMessages);
+    
+            setChatInput("");
+    
+            setTimeout(() => {
+                setChatMessages((prev) => [
+                    ...prev.slice(0, -1), 
+                    { role: "assistant", content: botReply }, 
+                ]);
+            }, 800);
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
+    };
+    
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
@@ -182,6 +228,94 @@ const MainLayout = ({ children }) => {
                     {children}
                 </Content>
             </Layout>
+
+            <FloatButton
+                icon={<MessageOutlined />}
+                type="primary"
+                tooltip="Chat trợ lý"
+                onClick={toggleChatModal}
+            />
+
+        <Modal
+            open={chatVisible}
+            onCancel={toggleChatModal}
+            footer={null}
+            width={350}
+            closable
+            mask={false}
+            style={{
+                position: "fixed",
+                bottom: 100,
+                right: 30,
+                top: "auto",
+                margin: 0,
+                padding: 0,
+                transform: "none",
+                boxShadow: "0 0 10px rgba(0,0,0,0.2)",
+                borderRadius: 12,
+                overflow: "hidden"
+            }}
+            bodyStyle={{
+                maxHeight: 400,
+                overflowY: "auto",
+                position: "relative",
+            }}
+            title="Trợ lý ảo"
+        >
+            <List
+                dataSource={chatMessages}
+                renderItem={(item, index) => (
+                    <List.Item
+                        key={index}
+                        style={{
+                            justifyContent: item.role === "user" ? "flex-end" : "flex-start",
+                        }}
+                    >
+                        <div
+                            style={{
+                                background: item.role === "user" ? "#1890ff" : "#f0f0f0",
+                                color: item.role === "user" ? "#fff" : "#000",
+                                padding: "8px 12px",
+                                borderRadius: 16,
+                                maxWidth: "80%",
+                            }}
+                        >
+                            {item.content}
+                        </div>
+                    </List.Item>
+                )}
+            />
+
+            <div style={{
+                position: "sticky", 
+                bottom: 0, 
+                width: "100%", 
+                backgroundColor: "white", 
+                padding: "10px",
+                zIndex: 1,
+            }}>
+                <Input.TextArea
+                    rows={2}
+                    placeholder="Nhập tin nhắn..."
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onPressEnter={(e) => {
+                        if (!e.shiftKey) {
+                            e.preventDefault();
+                            handleSendMessage();
+                        }
+                    }}
+                />
+                <Button
+                    type="primary"
+                    style={{ marginTop: 8, width: "100%" }}
+                    onClick={handleSendMessage}
+                >
+                    Gửi
+                </Button>
+            </div>
+        </Modal>
+
         </Layout>
     );
 };
