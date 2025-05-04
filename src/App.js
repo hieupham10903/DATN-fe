@@ -1,13 +1,14 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./main/reducers.ts";
+import { Navigate, Outlet, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import EmployeeList from "./main/employee/employee-list.tsx";
 import HomePage from "./main/home/homepage.tsx";
-import MainLayout from "./MainLayout.js";
-import "./styles.scss";
 import UserHook from "./main/login/index.ts";
 import Login from "./main/login/login-form.tsx";
+import ProductList from "./main/product/product-list.tsx";
+import { store } from "./main/reducers.ts";
+import MainLayout from "./MainLayout.js";
+import "./styles.scss";
 
 const App = () => {
   const { isAuthenticated } = UserHook();
@@ -40,6 +41,7 @@ const App = () => {
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/employee-list" element={<EmployeeList />} />
+            <Route path="/product-list" element={<ProductList />} />
           </Route>
 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />

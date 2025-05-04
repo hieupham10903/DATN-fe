@@ -278,7 +278,6 @@ input.ant-input,
 select.ant-select {
     width: 100%; /* Đảm bảo độ rộng 100% */
     border-radius: $border-radius; /* Bo góc */
-    border: 1px solid darken($primary-color, 40%); /* Viền tối */
     outline: none;
     transition: 0.3s;
 }

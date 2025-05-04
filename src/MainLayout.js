@@ -56,7 +56,7 @@ const MainLayout = ({ children }) => {
 
     const [chatVisible, setChatVisible] = useState(false);
     const [chatInput, setChatInput] = useState("");
-    const [chatMessages, setChatMessages] = useState([]);
+    const [chatMessages, setChatMessages] = useState([{ role: "assistant", content: "Xin chào, bạn cần trợ giúp gì?" }]);
 
     const toggleChatModal = () => {
         setChatVisible(!chatVisible);
@@ -136,6 +136,9 @@ const MainLayout = ({ children }) => {
                     </Menu.Item>
                     <Menu.Item key="employees" onClick={() => handleTopMenuClick("employees")}>
                         <Link to="/employee-list">Danh sách nhân viên</Link>
+                    </Menu.Item>
+                    <Menu.Item key="products" onClick={() => handleTopMenuClick("products")}>
+                        <Link to="/product-list">Danh sách sản phẩm</Link>
                     </Menu.Item>
                     <Menu.Item key="about" onClick={() => handleTopMenuClick("about")}>
                         <Link to="/about">Giới thiệu</Link>
