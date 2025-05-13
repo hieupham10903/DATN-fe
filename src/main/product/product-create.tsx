@@ -26,6 +26,7 @@ function ProductCreate({ handleCloseModal, isReset }) {
     try {
       const formData = new FormData();
 
+      formData.append("code", value.code);
       formData.append("imageUrl", value.imageUrl?.fileList[0]?.originFileObj);
 
       const imageDetailPaths =
