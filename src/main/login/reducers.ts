@@ -8,7 +8,7 @@ const initialState = {
 
 export const login = createAsyncThunk("user/login", async (body: any) => {
   localStorage.setItem("isAuthenticated", "true");
-  const response = await axios.post<any>("/api/auth/login", body);
+  const response = await axios.post<any>("/api/auth/login-admin", body);
   return response.data;
 });
 
