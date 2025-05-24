@@ -16,7 +16,7 @@ import {
   Table,
   TableColumnsType,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { gender, role } from "../common/constant.ts";
 import {
   DataSearchEmployee,
@@ -25,6 +25,7 @@ import {
 import ProductHook from "./index.ts";
 import ProductCreate from "./product-create.tsx";
 import ProductDetail from "./product-detail.tsx";
+import ProductUpdate from "./product-update.tsx";
 
 const ProductList = () => {
   const {
@@ -132,6 +133,18 @@ const ProductList = () => {
     ResetProductState();
   };
 
+  const handleOpenUpdate = (record) => {
+    setVisibleUpdate(true);
+    setReset(!isReset);
+    setRecord(record);
+  };
+
+  const handleCloseUpdate = () => {
+    setVisibleUpdate(false);
+    setReset(!isReset);
+    ResetProductState();
+  };
+
   const columns: TableColumnsType = [
     {
       title: "STT",
@@ -168,9 +181,9 @@ const ProductList = () => {
       align: "center",
     },
     {
-      title: "Tên kệ",
-      dataIndex: "shelfId",
-      key: "shelfId",
+      title: "Mã kho",
+      dataIndex: "warehouseId",
+      key: "warehouseId",
       align: "center",
     },
     {
@@ -189,7 +202,7 @@ const ProductList = () => {
             shape="circle"
             icon={<EditOutlined />}
             className="ant-btn edit"
-            onClick={() => console.log("Chỉnh sửa:", record)}
+            onClick={() => handleOpenUpdate(record)}
           />
           <Button
             shape="circle"
@@ -225,6 +238,19 @@ const ProductList = () => {
           productData={record}
           handleCloseModal={handleCloseDetail}
           isReset={isReset}
+        />
+      </Modal>
+
+      <Modal
+        title="Chỉnh sửa sản phẩm"
+        onCancel={handleCloseUpdate}
+        width={1500}
+        visible={visibleUpdate}
+        footer={null}
+      >
+        <ProductUpdate
+          productData={record}
+          handleCloseModal={handleCloseUpdate}
         />
       </Modal>
 

@@ -1,6 +1,6 @@
 import { CloseOutlined, PictureOutlined } from "@ant-design/icons";
 import { Button, Col, Descriptions, Divider, Row, Space } from "antd";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ProductHook from "./index.ts";
 
 function ProductDetail({ productData, handleCloseModal, isReset }) {
@@ -47,8 +47,8 @@ function ProductDetail({ productData, handleCloseModal, isReset }) {
         <Descriptions.Item label="Mã danh mục">
           {productData.categoryId}
         </Descriptions.Item>
-        <Descriptions.Item label="Mã kệ">
-          {productData.shelfId}
+        <Descriptions.Item label="Mã kho">
+          {productData.warehouseId}
         </Descriptions.Item>
         <Descriptions.Item label="Mô tả" span={2}>
           {productData.description || "Không có"}

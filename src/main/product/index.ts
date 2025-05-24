@@ -7,6 +7,7 @@ import {
   getMultipleImages,
   resetState,
   searchProduct,
+  updateProductWithImage,
   uploadImage,
 } from "./reducers.ts";
 
@@ -70,6 +71,10 @@ const ProductHook = () => {
     dispatch(resetState());
   };
 
+  const UpdateProductWithImage = (formData: FormData) => {
+    dispatch(updateProductWithImage(formData));
+  };
+
   return {
     GetDataSearch,
     listProduct,
@@ -83,6 +88,7 @@ const ProductHook = () => {
     mainImage,
     detailImages,
     ResetProductState,
+    UpdateProductWithImage,
   };
 };
 export default ProductHook;

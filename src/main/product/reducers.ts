@@ -77,6 +77,20 @@ export const getMultipleImages = createAsyncThunk(
   }
 );
 
+export const updateProductWithImage = createAsyncThunk(
+  "product/updateProductWithImage",
+  async (formData: FormData) => {
+    const response = await axios.post(
+      "/api/update-product-with-image",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    return response.data;
+  }
+);
+
 const productReducer = createSlice({
   name: "productReducer",
   initialState,
@@ -114,6 +128,15 @@ const productReducer = createSlice({
       })
       .addCase(getMultipleImages.fulfilled, (state, action) => {
         state.detailImages = action.payload;
+      })
+      .addCase(updateProductWithImage.fulfilled, (state, action) => {
+        state.updateSuccess = true;
+      })
+      .addCase(updateProductWithImage.pending, (state, action) => {
+        state.updateSuccess = false;
+      })
+      .addCase(updateProductWithImage.rejected, (state, action) => {
+        state.updateSuccess = false;
       });
   },
 });

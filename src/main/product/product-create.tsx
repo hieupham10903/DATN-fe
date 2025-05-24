@@ -14,7 +14,7 @@ import {
   Upload,
   message,
 } from "antd";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ProductHook from "./index.ts";
 
 function ProductCreate({ handleCloseModal, isReset }) {
@@ -112,7 +112,7 @@ function ProductCreate({ handleCloseModal, isReset }) {
       </Row>
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item name="shelfId" label="Mã kệ">
+          <Form.Item name="warehouseId" label="Mã kho">
             <Input />
           </Form.Item>
         </Col>
