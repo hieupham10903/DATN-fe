@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosClient from "../common/axiosClient.ts";
 
 const API_URL = "http://localhost:8080/api";
 
@@ -8,29 +8,31 @@ const initialState = {
   totalEmployee: 0,
   employee: undefined,
   error: null,
-  updateSuccess : false,
+  updateSuccess: false,
 };
 
-const apiSearchEmployee = '/api/search-employee';
-const apiCreateEmployee = '/api/create-employee';
+const apiSearchEmployee = "/api/search-employee";
+const apiCreateEmployee = "/api/create-employee";
 
 export const searchEmployee = createAsyncThunk(
-  'employee/searchEmployee',
+  "employee/searchEmployee",
   async ({ query, bodyRep }: any) => {
     const requestUrl = `${apiSearchEmployee}?${query}`;
-    const response = await axios.post<any>(requestUrl, bodyRep);
+    const response = await axiosClient.post<any>(requestUrl, bodyRep);
     return response;
-  });
+  }
+);
 
 export const createEmployee = createAsyncThunk(
-  'employee/createEmployee',
-  async (body : any) => {
-    const response = await axios.post<any>(apiCreateEmployee, body);
+  "employee/createEmployee",
+  async (body: any) => {
+    const response = await axiosClient.post<any>(apiCreateEmployee, body);
     return response;
-  });
+  }
+);
 
 const employeeReducer = createSlice({
-  name: 'employeeReducer',
+  name: "employeeReducer",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -38,7 +40,7 @@ const employeeReducer = createSlice({
       .addCase(searchEmployee.fulfilled, (state, action) => {
         state.listEmployee = action.payload.data;
         state.totalEmployee = action.payload.headers
-          ? parseInt(action.payload.headers['x-total-count'], 10) || 0
+          ? parseInt(action.payload.headers["x-total-count"], 10) || 0
           : 0;
       })
       .addCase(createEmployee.fulfilled, (state, action) => {
@@ -49,7 +51,7 @@ const employeeReducer = createSlice({
       })
       .addCase(createEmployee.rejected, (state, action) => {
         state.updateSuccess = false;
-      })
+      });
   },
 });
 

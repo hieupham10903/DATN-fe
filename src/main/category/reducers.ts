@@ -47,7 +47,7 @@ export const updateCategory = createAsyncThunk(
 export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
   async (id: string) => {
-    const response = await axiosClient.get<any>(
+    const response = await axiosClient.post<any>(
       `${apiDeleteCategory}?id=${id}`
     );
     return response;

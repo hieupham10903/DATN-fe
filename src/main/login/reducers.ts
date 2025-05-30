@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosClient from "../common/axiosClient.ts";
 
 const initialState = {
   isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
@@ -8,17 +8,17 @@ const initialState = {
 
 export const login = createAsyncThunk("user/login", async (body: any) => {
   localStorage.setItem("isAuthenticated", "true");
-  const response = await axios.post<any>("/api/auth/login-admin", body);
+  const response = await axiosClient.post<any>("/api/auth/login-admin", body);
   return response.data;
 });
 
 export const register = createAsyncThunk("user/register", async (body: any) => {
-  const response = await axios.post<any>("/api/auth/register", body);
+  const response = await axiosClient.post<any>("/api/auth/register", body);
   return response.data;
 });
 
 export const chatBot = createAsyncThunk("user/chat_bot", async (body: any) => {
-  const response = await axios.post<any>("/api/chatbot", body);
+  const response = await axiosClient.post<any>("/api/chatbot", body);
   return response.data;
 });
 
