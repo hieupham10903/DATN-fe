@@ -1,5 +1,4 @@
 import {
-    MenuOutlined,
     MessageOutlined
 } from "@ant-design/icons";
 import {
@@ -128,9 +127,6 @@ const MainLayout = ({ children }) => {
                     className="custom-menu"
                     selectedKeys={[selectedMenu]}
                 >
-                    <Menu.Item key="toggle-menu" onClick={toggleSider}>
-                        <MenuOutlined style={{ fontSize: "18px", color: "#fff" }} />
-                    </Menu.Item>
                     <Menu.Item key="home" onClick={() => handleTopMenuClick("home")}>
                         <Link to="/">Trang chủ</Link>
                     </Menu.Item>

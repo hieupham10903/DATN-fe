@@ -1,6 +1,8 @@
-import React from "react";
 import { Provider } from "react-redux";
 import { Navigate, Outlet, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CategoryList from "./main/category/category-list.tsx";
 import EmployeeList from "./main/employee/employee-list.tsx";
 import HomePage from "./main/home/homepage.tsx";
 import UserHook from "./main/login/index.ts";
@@ -29,6 +31,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <ToastContainer />
         <Routes>
           <Route path="/login" element={<Login />} />
 
@@ -42,6 +45,7 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/employee-list" element={<EmployeeList />} />
             <Route path="/product-list" element={<ProductList />} />
+            <Route path="/category-list" element={<CategoryList />} />
           </Route>
 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />

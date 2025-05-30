@@ -16,7 +16,7 @@ const apiSearchProduct = "/api/search-product";
 const apiCreateProduct = "/api/create-product";
 
 export const searchProduct = createAsyncThunk(
-  "product/searchEmployee",
+  "product/searchProduct",
   async ({ query, bodyRep }: any) => {
     const requestUrl = `${apiSearchProduct}?${query}`;
     const response = await axios.post<any>(requestUrl, bodyRep);
@@ -25,7 +25,7 @@ export const searchProduct = createAsyncThunk(
 );
 
 export const createProduct = createAsyncThunk(
-  "product/createEmployee",
+  "product/createProduct",
   async (body: any) => {
     const response = await axios.post<any>(apiCreateProduct, body);
     return response;
