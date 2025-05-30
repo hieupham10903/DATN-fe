@@ -12,7 +12,7 @@ import {
     Menu,
     Modal
 } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserHook from "./main/login/index.ts";
 import avatar from './picture/avatar.png';
@@ -140,8 +140,11 @@ const MainLayout = ({ children }) => {
                     <Menu.Item key="products" onClick={() => handleTopMenuClick("products")}>
                         <Link to="/product-list">Danh sách sản phẩm</Link>
                     </Menu.Item>
-                    <Menu.Item key="about" onClick={() => handleTopMenuClick("about")}>
-                        <Link to="/about">Giới thiệu</Link>
+                    <Menu.Item key="categories" onClick={() => handleTopMenuClick("categories")}>
+                        <Link to="/category-list">Danh sách danh mục</Link>
+                    </Menu.Item>
+                    <Menu.Item key="warehouses" onClick={() => handleTopMenuClick("warehouses")}>
+                        <Link to="/warehouse-list">Danh sách kho</Link>
                     </Menu.Item>
                 </Menu>
 
@@ -177,56 +180,6 @@ const MainLayout = ({ children }) => {
             </Header>
 
             <Layout style={{ marginTop: 64 }}>
-                <Sider
-                    width={200}
-                    collapsed={collapsed}
-                    onCollapse={(collapsed) => setCollapsed(collapsed)}
-                    style={{ background: "#fff" }}
-                >
-                    <Menu
-                        mode="inline"
-                        selectedKeys={[selectedMenu]}
-                        style={{
-                            height: "100%",
-                            borderRight: 0,
-                            paddingTop: 20,
-                        }}
-                    >
-                        {selectedMenu === "home" && (
-                            <>
-                                <Menu.Item key="home-1">
-                                    <Link to="/home/feature-1">Feature 1</Link>
-                                </Menu.Item>
-                                <Menu.Item key="home-2">
-                                    <Link to="/home/feature-2">Feature 2</Link>
-                                </Menu.Item>
-                            </>
-                        )}
-
-                        {selectedMenu === "employees" && (
-                            <>
-                                <Menu.Item key="employees-1">
-                                    <Link to="/employee-list/department-1">Department 1</Link>
-                                </Menu.Item>
-                                <Menu.Item key="employees-2">
-                                    <Link to="/employee-list/department-2">Department 2</Link>
-                                </Menu.Item>
-                            </>
-                        )}
-
-                        {selectedMenu === "about" && (
-                            <>
-                                <Menu.Item key="about-1">
-                                    <Link to="/about/team">Our Team</Link>
-                                </Menu.Item>
-                                <Menu.Item key="about-2">
-                                    <Link to="/about/history">History</Link>
-                                </Menu.Item>
-                            </>
-                        )}
-                    </Menu>
-                </Sider>
-
                 <Content style={{ padding: "20px", minHeight: "calc(100vh - 64px)" }}>
                     {children}
                 </Content>
