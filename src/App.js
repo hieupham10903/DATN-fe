@@ -9,6 +9,7 @@ import UserHook from "./main/login/index.ts";
 import Login from "./main/login/login-form.tsx";
 import ProductList from "./main/product/product-list.tsx";
 import { store } from "./main/reducers.ts";
+import WarehouseList from "./main/warehouse/warehouse-list.tsx";
 import MainLayout from "./MainLayout.js";
 import "./styles.scss";
 
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="/employee-list" element={<EmployeeList />} />
             <Route path="/product-list" element={<ProductList />} />
             <Route path="/category-list" element={<CategoryList />} />
+                        <Route path="/warehouse-list" element={<WarehouseList />} />
           </Route>
 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />

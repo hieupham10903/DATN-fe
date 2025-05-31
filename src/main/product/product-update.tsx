@@ -10,6 +10,7 @@ import {
   Input,
   InputNumber,
   Row,
+  Select,
   Space,
   Upload,
   message,
@@ -19,7 +20,8 @@ import ProductHook from "./index.ts";
 
 function ProductUpdate({ productData, handleCloseModal }) {
   const [form] = Form.useForm();
-  const { UpdateProductWithImage, updateSuccess } = ProductHook();
+  const { UpdateProductWithImage, updateSuccess, listCategory, listWarehouse } =
+    ProductHook();
 
   const [fileListImageUrl, setFileListImageUrl] = useState([]);
   const [fileListImageDetail, setFileListImageDetail] = useState([]);
@@ -124,17 +126,37 @@ function ProductUpdate({ productData, handleCloseModal }) {
 
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item name="categoryId" label="Mã danh mục">
-            <Input />
+          <Form.Item
+            name="categoryId"
+            label="Danh mục"
+            rules={[{ required: true, message: "Chọn danh mục" }]}
+          >
+            <Select
+              placeholder="Chọn danh mục"
+              options={listCategory.map((item) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+              style={{ width: "100%" }}
+            />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="warehouseId" label="Mã kho">
-            <Input />
+          <Form.Item
+            name="warehouseId"
+            label="Kho"
+            rules={[{ required: true, message: "Chọn kho" }]}
+          >
+            <Select
+              placeholder="Chọn kho"
+              options={listWarehouse.map((item) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+            />
           </Form.Item>
         </Col>
       </Row>
-
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item name="description" label="Mô tả">

@@ -4,8 +4,14 @@ import { useEffect } from "react";
 import ProductHook from "./index.ts";
 
 function ProductDetail({ productData, handleCloseModal, isReset }) {
-  const { GetMainImage, GetDetailImages, mainImage, detailImages } =
-    ProductHook();
+  const {
+    GetMainImage,
+    GetDetailImages,
+    mainImage,
+    detailImages,
+    listCategory,
+    listWarehouse,
+  } = ProductHook();
 
   const imageDetails = productData.imageDetail
     ? productData.imageDetail.split(",")
@@ -44,12 +50,15 @@ function ProductDetail({ productData, handleCloseModal, isReset }) {
         <Descriptions.Item label="Số lượng trong kho">
           {productData.stockQuantity}
         </Descriptions.Item>
-        <Descriptions.Item label="Mã danh mục">
-          {productData.categoryId}
+        <Descriptions.Item label="Danh mục">
+          {listCategory.find((c) => c.id === productData.categoryId)?.name ||
+            "Không rõ"}
         </Descriptions.Item>
-        <Descriptions.Item label="Mã kho">
-          {productData.warehouseId}
+        <Descriptions.Item label="Kho">
+          {listWarehouse.find((w) => w.id === productData.warehouseId)?.name ||
+            "Không rõ"}
         </Descriptions.Item>
+
         <Descriptions.Item label="Mô tả" span={2}>
           {productData.description || "Không có"}
         </Descriptions.Item>

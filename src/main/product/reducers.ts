@@ -10,10 +10,14 @@ const initialState = {
   updateSuccess: false,
   mainImage: null as string | null,
   detailImages: [] as string[],
+  listCategory: [] as any,
+  listWarehouse: [] as any,
 };
 
 const apiSearchProduct = "/api/search-product";
 const apiCreateProduct = "/api/create-product";
+const apiGetAllCategory = "/api/get-all-category";
+const apiGetAllWarehouse = "/api/get-all-warehouse";
 
 export const searchProduct = createAsyncThunk(
   "product/searchProduct",
@@ -94,6 +98,22 @@ export const updateProductWithImage = createAsyncThunk(
   }
 );
 
+export const listAllCategory = createAsyncThunk(
+  "product/listAllCategory",
+  async (body: any) => {
+    const response = await axiosClient.post<any>(apiGetAllCategory, body);
+    return response;
+  }
+);
+
+export const listAllWarehouse = createAsyncThunk(
+  "product/listAllWarehouse",
+  async (body: any) => {
+    const response = await axiosClient.post<any>(apiGetAllWarehouse, body);
+    return response;
+  }
+);
+
 const productReducer = createSlice({
   name: "productReducer",
   initialState,
@@ -140,6 +160,12 @@ const productReducer = createSlice({
       })
       .addCase(updateProductWithImage.rejected, (state, action) => {
         state.updateSuccess = false;
+      })
+      .addCase(listAllCategory.fulfilled, (state, action) => {
+        state.listCategory = action.payload.data;
+      })
+      .addCase(listAllWarehouse.fulfilled, (state, action) => {
+        state.listWarehouse = action.payload.data;
       });
   },
 });

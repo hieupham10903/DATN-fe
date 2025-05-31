@@ -10,6 +10,7 @@ import {
   Input,
   InputNumber,
   Row,
+  Select,
   Space,
   Upload,
   message,
@@ -17,10 +18,18 @@ import {
 import { useEffect } from "react";
 import ProductHook from "./index.ts";
 
+const { Option } = Select;
+
 function ProductCreate({ handleCloseModal, isReset }) {
   const [formModal] = Form.useForm();
-  const { CreateProduct, updateSuccess, UploadImage, imageUploadUrl } =
-    ProductHook();
+  const {
+    CreateProduct,
+    updateSuccess,
+    UploadImage,
+    imageUploadUrl,
+    listCategory,
+    listWarehouse,
+  } = ProductHook();
 
   const onFinish = async (value) => {
     try {
@@ -105,15 +114,35 @@ function ProductCreate({ handleCloseModal, isReset }) {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="categoryId" label="Mã danh mục">
-            <Input />
+          <Form.Item
+            name="categoryId"
+            label="Danh mục"
+            rules={[{ required: true, message: "Chọn danh mục" }]}
+          >
+            <Select
+              placeholder="Chọn danh mục"
+              options={listCategory.map((item) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+            />
           </Form.Item>
         </Col>
       </Row>
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item name="warehouseId" label="Mã kho">
-            <Input />
+          <Form.Item
+            name="warehouseId"
+            label="Kho"
+            rules={[{ required: true, message: "Chọn kho" }]}
+          >
+            <Select
+              placeholder="Chọn kho"
+              options={listWarehouse.map((item) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+            />
           </Form.Item>
         </Col>
         <Col span={12}>

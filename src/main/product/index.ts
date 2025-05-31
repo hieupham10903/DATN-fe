@@ -5,6 +5,8 @@ import {
   createProduct,
   getImage,
   getMultipleImages,
+  listAllCategory,
+  listAllWarehouse,
   resetState,
   searchProduct,
   updateProductWithImage,
@@ -31,6 +33,14 @@ const ProductHook = () => {
   const mainImage = useSelector((state: RootState) => state.product.mainImage);
   const detailImages = useSelector(
     (state: RootState) => state.product.detailImages
+  );
+
+  const listCategory = useSelector(
+    (state: RootState) => state.product.listCategory
+  );
+
+  const listWarehouse = useSelector(
+    (state: RootState) => state.product.listWarehouse
   );
 
   const GetDataSearch = (paginationState) => {
@@ -75,6 +85,14 @@ const ProductHook = () => {
     dispatch(updateProductWithImage(formData));
   };
 
+  const ListAllCategory = (body: any) => {
+    dispatch(listAllCategory(body));
+  };
+
+  const ListAllWarehouse = (body: any) => {
+    dispatch(listAllWarehouse(body));
+  };
+
   return {
     GetDataSearch,
     listProduct,
@@ -89,6 +107,10 @@ const ProductHook = () => {
     detailImages,
     ResetProductState,
     UpdateProductWithImage,
+    ListAllCategory,
+    listCategory,
+    ListAllWarehouse,
+    listWarehouse,
   };
 };
 export default ProductHook;

@@ -22,28 +22,24 @@ import {
   DataSearchEmployee,
   ObjectTypeEmployee,
 } from "../common/data-search.ts";
-import ProductHook from "./index.ts";
-import ProductCreate from "./product-create.tsx";
-import ProductDetail from "./product-detail.tsx";
-import ProductUpdate from "./product-update.tsx";
+import WarehouseHook from "./index.ts";
+import WarehouseCreate from "./warehouse-create.tsx";
+import WarehouseDetail from "./warehouse-detail.tsx";
+import WarehouseUpdate from "./warehouse-update.tsx";
 
-const ProductList = () => {
+const WarehouseList = () => {
   const {
     GetDataSearch,
-    listProduct,
-    totalProduct,
-    updateSuccess,
-    ResetProductState,
-    ListAllCategory,
-    listCategory,
-    ListAllWarehouse,
     listWarehouse,
-  } = ProductHook();
+    totalWarehouse,
+    updateSuccess,
+    DeleteWarehouse,
+  } = WarehouseHook();
 
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
-    sort: "code,asc",
+    sort: "name,asc",
     dataSearch: {},
   });
 
@@ -64,11 +60,6 @@ const ProductList = () => {
       pageSize,
     }));
   };
-
-  useEffect(() => {
-    ListAllCategory({});
-    ListAllWarehouse({});
-  }, []);
 
   useEffect(() => {
     GetDataSearch(pagination);
@@ -139,7 +130,6 @@ const ProductList = () => {
   const handleCloseDetail = () => {
     setVisibleDetail(false);
     setReset(!isReset);
-    ResetProductState();
   };
 
   const handleOpenUpdate = (record) => {
@@ -151,7 +141,10 @@ const ProductList = () => {
   const handleCloseUpdate = () => {
     setVisibleUpdate(false);
     setReset(!isReset);
-    ResetProductState();
+  };
+
+  const handleDelete = (value) => {
+    DeleteWarehouse(value.id);
   };
 
   const columns: TableColumnsType = [
@@ -166,42 +159,22 @@ const ProductList = () => {
       },
     },
     {
-      title: "Mã sản phẩm",
+      title: "Mã kho",
       dataIndex: "code",
       key: "code",
       align: "center",
     },
     {
-      title: "Tên sản phẩm",
+      title: "Tên kho",
       dataIndex: "name",
       key: "name",
       align: "center",
     },
     {
-      title: "Giá",
-      dataIndex: "price",
-      key: "price",
+      title: "Địa chỉ",
+      dataIndex: "location",
+      key: "location",
       align: "center",
-    },
-    {
-      title: "Tên danh mục",
-      dataIndex: "categoryId",
-      key: "categoryId",
-      align: "center",
-      render: (categoryId: number) => {
-        const category = listCategory.find((c) => c.id === categoryId);
-        return category?.name || "Không rõ";
-      },
-    },
-    {
-      title: "Mã kho",
-      dataIndex: "warehouseId",
-      key: "warehouseId",
-      align: "center",
-      render: (warehouseId: number) => {
-        const warehouse = listWarehouse.find((w) => w.id === warehouseId);
-        return warehouse?.name || "Không rõ";
-      },
     },
     {
       title: "Hành động",
@@ -225,7 +198,7 @@ const ProductList = () => {
             shape="circle"
             icon={<DeleteOutlined />}
             className="ant-btn delete"
-            onClick={() => console.log("Xóa:", record)}
+            onClick={() => handleDelete(record)}
           />
         </div>
       ),
@@ -235,44 +208,46 @@ const ProductList = () => {
   return (
     <>
       <Modal
-        title="Thêm mới sản phẩm"
+        title="Thêm mới kho"
         onCancel={handleCloseCreate}
         width={1500}
         visible={visibleCreate}
         footer={null}
       >
-        <ProductCreate handleCloseModal={handleCloseCreate} isReset={isReset} />
-      </Modal>
-
-      <Modal
-        title="Chi tiết sản phẩm"
-        onCancel={handleCloseDetail}
-        width={1500}
-        visible={visibleDetail}
-        footer={null}
-      >
-        <ProductDetail
-          productData={record}
-          handleCloseModal={handleCloseDetail}
+        <WarehouseCreate
+          handleCloseModal={handleCloseCreate}
           isReset={isReset}
         />
       </Modal>
 
       <Modal
-        title="Chỉnh sửa sản phẩm"
+        title="Chi tiết kho"
+        onCancel={handleCloseDetail}
+        width={1500}
+        visible={visibleDetail}
+        footer={null}
+      >
+        <WarehouseDetail
+          warehouseData={record}
+          handleCloseModal={handleCloseDetail}
+        />
+      </Modal>
+
+      <Modal
+        title="Chỉnh sửa kho"
         onCancel={handleCloseUpdate}
         width={1500}
         visible={visibleUpdate}
         footer={null}
       >
-        <ProductUpdate
-          productData={record}
+        <WarehouseUpdate
+          warehouseData={record}
           handleCloseModal={handleCloseUpdate}
         />
       </Modal>
 
       <div>
-        <h2>Danh sách sản phẩm</h2>
+        <h2>Danh sách kho</h2>
 
         <Form layout="inline" style={{ marginBottom: 20 }}>
           <Row
@@ -345,13 +320,13 @@ const ProductList = () => {
 
         <Table
           columns={columns}
-          dataSource={listProduct}
+          dataSource={listWarehouse}
           rowKey="id"
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,
             showSizeChanger: true,
-            total: totalProduct,
+            total: totalWarehouse,
           }}
           onChange={onChangePagination}
         />
@@ -360,4 +335,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default WarehouseList;
