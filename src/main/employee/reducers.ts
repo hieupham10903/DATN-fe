@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosClient from "../common/axiosClient.ts";
 
-const API_URL = "http://localhost:8080/api";
-
 const initialState = {
   listEmployee: [],
   totalEmployee: 0,

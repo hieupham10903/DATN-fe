@@ -30,7 +30,7 @@ function ProductUpdate({ productData, handleCloseModal }) {
         uid: `${idx}`,
         name: path.split("/").pop(),
         status: "done",
-        url: `http://localhost:8080/api/get-image?imagePath=${encodeURIComponent(
+        url: `http://localhost:8888/api/get-image?imagePath=${encodeURIComponent(
           path
         )}`,
       })) || []
