@@ -29,7 +29,7 @@ function ProductUpdate({ productData, handleCloseModal }) {
   const convertFileList = (paths) => {
     return (
       paths?.split(",").map((path, idx) => ({
-        uid: `${idx}`,
+        uid: `uploaded-${idx}`,
         name: path.split("/").pop(),
         status: "done",
         url: `http://localhost:8888/api/get-image?imagePath=${encodeURIComponent(
@@ -40,15 +40,15 @@ function ProductUpdate({ productData, handleCloseModal }) {
   };
 
   useEffect(() => {
-    setFileListImageUrl(convertFileList(productData.imageUrl));
-    setFileListImageDetail(convertFileList(productData.imageDetail));
-    form.setFieldsValue({
-      ...productData,
-    });
-  }, [productData, form]);
+    if (productData) {
+      setFileListImageUrl(convertFileList(productData.imageUrl));
+      setFileListImageDetail(convertFileList(productData.imageDetail));
+      form.setFieldsValue({ ...productData });
+    }
+  }, [productData]);
 
   const fileListToString = (fileList) => {
-    if (!fileList || fileList.length === 0) return "";
+    if (!fileList?.length) return "";
     return fileList.map((f) => `D:/DATN/Image/${f.name}`).join(",");
   };
 
@@ -66,12 +66,10 @@ function ProductUpdate({ productData, handleCloseModal }) {
 
       formData.append("product", JSON.stringify(payload));
 
-      // Thêm file ảnh chính (nếu có)
       if (fileListImageUrl[0]?.originFileObj) {
         formData.append("imageUrl", fileListImageUrl[0].originFileObj);
       }
 
-      // Thêm các file ảnh chi tiết (nếu có)
       fileListImageDetail.forEach((file) => {
         if (file.originFileObj) {
           formData.append("imageDetail", file.originFileObj);
@@ -86,7 +84,7 @@ function ProductUpdate({ productData, handleCloseModal }) {
 
   useEffect(() => {
     if (updateSuccess) handleCloseModal();
-  }, [updateSuccess, handleCloseModal]);
+  }, [updateSuccess]);
 
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -95,7 +93,7 @@ function ProductUpdate({ productData, handleCloseModal }) {
           <Form.Item
             name="name"
             label="Tên sản phẩm"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
           >
             <Input />
           </Form.Item>
@@ -104,21 +102,29 @@ function ProductUpdate({ productData, handleCloseModal }) {
           <Form.Item
             name="code"
             label="Mã sản phẩm"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Vui lòng nhập mã sản phẩm" }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
         </Col>
       </Row>
 
       <Row gutter={24}>
         <Col span={12}>
-          <Form.Item name="price" label="Giá" rules={[{ required: true }]}>
+          <Form.Item
+            name="price"
+            label="Giá"
+            rules={[{ required: true, message: "Vui lòng nhập giá" }]}
+          >
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="stockQuantity" label="Số lượng trong kho">
+          <Form.Item
+            name="stockQuantity"
+            label="Số lượng trong kho"
+            rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
+          >
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
         </Col>
@@ -137,7 +143,6 @@ function ProductUpdate({ productData, handleCloseModal }) {
                 label: item.name,
                 value: item.id,
               }))}
-              style={{ width: "100%" }}
             />
           </Form.Item>
         </Col>
@@ -157,10 +162,11 @@ function ProductUpdate({ productData, handleCloseModal }) {
           </Form.Item>
         </Col>
       </Row>
+
       <Row gutter={24}>
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item name="description" label="Mô tả">
-            <Input.TextArea rows={2} />
+            <Input.TextArea rows={3} />
           </Form.Item>
         </Col>
       </Row>
