@@ -29,6 +29,8 @@ function ProductDetail({ productData, handleCloseModal, isReset }) {
     }
   }, [imageDetails, isReset]);
 
+  console.log("mainImage", mainImage);
+
   return (
     <>
       <Descriptions
