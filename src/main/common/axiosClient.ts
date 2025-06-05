@@ -22,8 +22,6 @@ axiosClient.interceptors.response.use(
       autoClose: 3000,
     });
 
-    console.log("responseData", responseData);
-
     return Promise.reject(error);
   }
 );

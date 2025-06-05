@@ -41,7 +41,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8888",
+  "proxy": "https://2cff-42-114-95-227.ngrok-free.app",
   "devDependencies": {
     "sass": "^1.83.4"
   }
