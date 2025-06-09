@@ -131,7 +131,7 @@ const MainLayout = ({ children }) => {
                         <Link to="/">Trang chủ</Link>
                     </Menu.Item>
                     <Menu.Item key="employees" onClick={() => handleTopMenuClick("employees")}>
-                        <Link to="/employee-list">Danh sách nhân viên</Link>
+                        <Link to="/employee-list">Danh sách người dùng</Link>
                     </Menu.Item>
                     <Menu.Item key="products" onClick={() => handleTopMenuClick("products")}>
                         <Link to="/product-list">Danh sách sản phẩm</Link>

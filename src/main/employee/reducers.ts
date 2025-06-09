@@ -1,16 +1,25 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  isFulfilled,
+  isPending,
+  isRejected,
+} from "@reduxjs/toolkit";
 import axiosClient from "../common/axiosClient.ts";
 
 const initialState = {
   listEmployee: [],
   totalEmployee: 0,
-  employee: undefined,
+  employee: undefined as any,
   error: null,
   updateSuccess: false,
 };
 
 const apiSearchEmployee = "/api/search-employee";
 const apiCreateEmployee = "/api/create-employee";
+const apiUpdateEmployee = "/api/update-employee";
+const apiDeleteEmployee = "/api/delete-employee";
+const apiGetDetailEmployee = "/api/get-employee-by-id";
 
 export const searchEmployee = createAsyncThunk(
   "employee/searchEmployee",
@@ -29,6 +38,34 @@ export const createEmployee = createAsyncThunk(
   }
 );
 
+export const updateEmployee = createAsyncThunk(
+  "employee/updateEmployee",
+  async (body: any) => {
+    const response = await axiosClient.post<any>(apiUpdateEmployee, body);
+    return response;
+  }
+);
+
+export const deleteEmployee = createAsyncThunk(
+  "employee/deleteEmployee",
+  async (id: string) => {
+    const response = await axiosClient.post<any>(
+      `${apiDeleteEmployee}?id=${id}`
+    );
+    return response;
+  }
+);
+
+export const getDetailEmployee = createAsyncThunk(
+  "employee/getDetailEmployee",
+  async (id: string) => {
+    const response = await axiosClient.post<any>(
+      `${apiGetDetailEmployee}?id=${id}`
+    );
+    return response;
+  }
+);
+
 const employeeReducer = createSlice({
   name: "employeeReducer",
   initialState,
@@ -41,15 +78,27 @@ const employeeReducer = createSlice({
           ? parseInt(action.payload.headers["x-total-count"], 10) || 0
           : 0;
       })
-      .addCase(createEmployee.fulfilled, (state, action) => {
-        state.updateSuccess = true;
+      .addCase(getDetailEmployee.fulfilled, (state, action) => {
+        state.employee = action.payload.data;
       })
-      .addCase(createEmployee.pending, (state, action) => {
-        state.updateSuccess = false;
-      })
-      .addCase(createEmployee.rejected, (state, action) => {
-        state.updateSuccess = false;
-      });
+      .addMatcher(
+        isFulfilled(createEmployee, updateEmployee, deleteEmployee),
+        (state) => {
+          state.updateSuccess = true;
+        }
+      )
+      .addMatcher(
+        isPending(createEmployee, updateEmployee, deleteEmployee),
+        (state) => {
+          state.updateSuccess = false;
+        }
+      )
+      .addMatcher(
+        isRejected(createEmployee, updateEmployee, deleteEmployee),
+        (state) => {
+          state.updateSuccess = false;
+        }
+      );
   },
 });
 

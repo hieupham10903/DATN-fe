@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Tabs } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../picture/logo.png"; //kệ nó
 import UserHook from "./index.ts";
@@ -8,13 +8,21 @@ import UserHook from "./index.ts";
 const AuthForm = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { Login, Register, registerSuccess } = UserHook();
+  const {
+    Login,
+    Register,
+    isAuthenticated,
+    registerSuccess,
+    GetUserInfo,
+    userInfo,
+  } = UserHook();
   const [loginType, setLoginType] = useState("login");
 
   const onLoginFinish = async (values) => {
     setLoading(true);
     try {
       await Login(values);
+      await GetUserInfo(values);
       navigate("/");
     } finally {
       setLoading(false);

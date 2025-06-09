@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { Navigate, Outlet, Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CategoryList from "./main/category/category-list.tsx";
 import EmployeeList from "./main/employee/employee-list.tsx";
@@ -14,14 +14,22 @@ import MainLayout from "./MainLayout.js";
 import "./styles.scss";
 
 const App = () => {
-  const { isAuthenticated } = UserHook();
+  const { isAuthenticated, userInfo } = UserHook();
 
   const ProtectedRoute = ({ children }) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !userInfo) {
       return <Navigate to="/login" replace />;
     }
     return children;
   };
+
+  const AdminRoute = ({ children, userInfo }) => {
+  if (!userInfo || userInfo.role !== "ADMIN") {
+    toast.error("Bạn không có quyền truy cập trang này!");
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
   const MainLayoutWrapper = () => (
     <MainLayout>
@@ -44,10 +52,19 @@ const App = () => {
             }
           >
             <Route path="/" element={<HomePage />} />
-            <Route path="/employee-list" element={<EmployeeList />} />
+
+            <Route
+              path="/employee-list"
+              element={
+                <AdminRoute userInfo={userInfo}>
+                  <EmployeeList />
+                </AdminRoute>
+              }
+            />
+
             <Route path="/product-list" element={<ProductList />} />
             <Route path="/category-list" element={<CategoryList />} />
-                        <Route path="/warehouse-list" element={<WarehouseList />} />
+            <Route path="/warehouse-list" element={<WarehouseList />} />
           </Route>
 
           <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} />} />

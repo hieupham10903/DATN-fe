@@ -1,16 +1,35 @@
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, Form, Input, Row, Select, Space } from "antd";
+import dayjs from "dayjs";
 import { useEffect } from "react";
 import { gender, role } from "../common/constant.ts";
 import EmployeeHook from "./index.ts";
 
-function EmployeeCreate({ handleCloseModal, isReset }) {
+function EmployeeUpdate({ handleCloseModal, record }) {
   const [formModal] = Form.useForm();
 
-  const { CreateEmployee, updateSuccess } = EmployeeHook();
+  const { GetDetailEmployee, employee, UpdateEmployee, updateSuccess } =
+    EmployeeHook();
+
+  useEffect(() => {
+    GetDetailEmployee(record.id);
+  }, [record]);
+
+  useEffect(() => {
+    if (employee) {
+      const transformedEmployee = {
+        ...employee,
+        dob: employee.dob ? dayjs(employee.dob) : null,
+      };
+      formModal.setFieldsValue(transformedEmployee);
+    }
+  }, [employee]);
 
   const onFinish = (value) => {
-    CreateEmployee(value);
+    UpdateEmployee({
+      ...value,
+      id: employee.id,
+    });
   };
 
   useEffect(() => {
@@ -33,7 +52,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
               label="Mã người dùng"
               rules={[{ required: true, message: "Nhập mã người dùng" }]}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -49,7 +68,11 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="dob" label="Ngày sinh">
-              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                disabled
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -87,7 +110,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
         <Row gutter={24} justify={"start"}>
           <Col span={12}>
             <Form.Item name="username" label="Tài khoản">
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
         </Row>
@@ -115,4 +138,4 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
   );
 }
 
-export default EmployeeCreate;
+export default EmployeeUpdate;

@@ -4,6 +4,7 @@ import axiosClient from "../common/axiosClient.ts";
 const initialState = {
   isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
   registerSuccess: false,
+  userInfo: undefined as any,
 };
 
 export const login = createAsyncThunk("user/login", async (body: any) => {
@@ -22,6 +23,15 @@ export const chatBot = createAsyncThunk("user/chat_bot", async (body: any) => {
   return response.data;
 });
 
+export const getUserInfo = createAsyncThunk(
+  "user/userInfo",
+  async (body: any) => {
+    localStorage.setItem("isAuthenticated", "true");
+    const response = await axiosClient.post<any>("/api/auth/user-info", body);
+    return response.data;
+  }
+);
+
 const userReducer = createSlice({
   name: "userReducer",
   initialState,
@@ -32,6 +42,7 @@ const userReducer = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
       localStorage.removeItem("isAuthenticated");
+      state.userInfo = undefined;
     },
   },
   extraReducers: (builder) => {
@@ -53,6 +64,15 @@ const userReducer = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.registerSuccess = false;
+      })
+      .addCase(getUserInfo.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+      })
+      .addCase(getUserInfo.pending, (state, action) => {
+        state.userInfo = undefined;
+      })
+      .addCase(getUserInfo.rejected, (state, action) => {
+        state.userInfo = undefined;
       });
   },
 });

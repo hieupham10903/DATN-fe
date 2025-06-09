@@ -16,13 +16,15 @@ import {
   Table,
   TableColumnsType,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { gender, role } from "../common/constant.ts";
 import {
   DataSearchEmployee,
   ObjectTypeEmployee,
 } from "../common/data-search.ts";
 import EmployeeCreate from "./employee-create.tsx";
+import EmployeeDetail from "./employee-detail.tsx";
+import EmployeeUpdate from "./employee-update.tsx";
 import EmployeeHook from "./index.ts";
 
 const EmployeeList = () => {
@@ -43,6 +45,7 @@ const EmployeeList = () => {
   const [visibleCreate, setVisibleCreate] = useState(false);
   const [visibleDetail, setVisibleDetail] = useState(false);
   const [visibleUpdate, setVisibleUpdate] = useState(false);
+  const [record, setRecord] = useState(undefined);
 
   const onChangePagination = (paginationChange) => {
     const { current, pageSize } = paginationChange;
@@ -113,6 +116,26 @@ const EmployeeList = () => {
     setReset(!isReset);
   };
 
+  const handleOpenDetail = (record) => {
+    setRecord(record);
+    setVisibleDetail(true);
+  };
+
+  const handleCloseDetail = (record) => {
+    setRecord(record);
+    setVisibleDetail(false);
+  };
+
+  const handleOpenUpdate = (record) => {
+    setRecord(record);
+    setVisibleUpdate(true);
+  };
+
+  const handleCloseUpdate = (record) => {
+    setRecord(record);
+    setVisibleUpdate(false);
+  };
+
   const columns: TableColumnsType = [
     {
       title: "STT",
@@ -125,13 +148,13 @@ const EmployeeList = () => {
       },
     },
     {
-      title: "Mã nhân viên",
+      title: "Mã người dùng",
       dataIndex: "code",
       key: "code",
       align: "center",
     },
     {
-      title: "Tên nhân viên",
+      title: "Tên người dùng",
       dataIndex: "name",
       key: "name",
       align: "center",
@@ -161,13 +184,13 @@ const EmployeeList = () => {
             shape="circle"
             icon={<EyeOutlined />}
             className="ant-btn detail"
-            onClick={() => console.log("Chi tiết:", record)}
+            onClick={() => handleOpenDetail(record)}
           />
           <Button
             shape="circle"
             icon={<EditOutlined />}
             className="ant-btn edit"
-            onClick={() => console.log("Chỉnh sửa:", record)}
+            onClick={() => handleOpenUpdate(record)}
           />
           <Button
             shape="circle"
@@ -183,7 +206,7 @@ const EmployeeList = () => {
   return (
     <>
       <Modal
-        title="Thêm mới nhân viên"
+        title="Thêm mới người dùng"
         onCancel={handleCloseCreate}
         width={1500}
         visible={visibleCreate}
@@ -195,8 +218,28 @@ const EmployeeList = () => {
         />
       </Modal>
 
+      <Modal
+        title="Chi tiết người dùng"
+        onCancel={handleCloseDetail}
+        width={1500}
+        visible={visibleDetail}
+        footer={null}
+      >
+        <EmployeeDetail handleCloseModal={handleCloseDetail} record={record} />
+      </Modal>
+
+      <Modal
+        title="Chỉnh sửa người dùng"
+        onCancel={handleCloseUpdate}
+        width={1500}
+        visible={visibleUpdate}
+        footer={null}
+      >
+        <EmployeeUpdate handleCloseModal={handleCloseUpdate} record={record} />
+      </Modal>
+
       <div>
-        <h2>Danh sách nhân viên</h2>
+        <h2>Danh sách người dùng</h2>
 
         <Form layout="inline" style={{ marginBottom: 20 }}>
           <Row

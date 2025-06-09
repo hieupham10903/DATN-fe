@@ -1,28 +1,33 @@
-import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Row, Select, Space } from "antd";
+import { Col, DatePicker, Form, Input, Row, Select } from "antd";
+import dayjs from "dayjs";
 import { useEffect } from "react";
 import { gender, role } from "../common/constant.ts";
 import EmployeeHook from "./index.ts";
 
-function EmployeeCreate({ handleCloseModal, isReset }) {
+function EmployeeDetail({ handleCloseModal, record }) {
   const [formModal] = Form.useForm();
 
-  const { CreateEmployee, updateSuccess } = EmployeeHook();
-
-  const onFinish = (value) => {
-    CreateEmployee(value);
-  };
+  const { GetDetailEmployee, employee } = EmployeeHook();
 
   useEffect(() => {
-    handleCloseModal();
-  }, [updateSuccess]);
+    GetDetailEmployee(record.id);
+  }, [record]);
+
+  useEffect(() => {
+    if (employee) {
+      const transformedEmployee = {
+        ...employee,
+        dob: employee.dob ? dayjs(employee.dob) : null,
+      };
+      formModal.setFieldsValue(transformedEmployee);
+    }
+  }, [employee]);
 
   return (
     <>
       <Form
         layout="vertical"
         form={formModal}
-        onFinish={onFinish}
         name="control-hooks"
         initialValues={{}}
       >
@@ -33,7 +38,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
               label="Mã người dùng"
               rules={[{ required: true, message: "Nhập mã người dùng" }]}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -42,14 +47,18 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
               label="Tên người dùng"
               rules={[{ required: true, message: "Nhập tên người dùng" }]}
             >
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="dob" label="Ngày sinh">
-              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+              <DatePicker
+                style={{ width: "100%" }}
+                format="DD/MM/YYYY"
+                disabled
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -59,6 +68,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
                   value: key,
                   label: gender[key],
                 }))}
+                disabled
               />
             </Form.Item>
           </Col>
@@ -66,7 +76,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item name="email" label="Email">
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -80,6 +90,7 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
                   value: key,
                   label: role[key],
                 }))}
+                disabled
               />
             </Form.Item>
           </Col>
@@ -87,32 +98,13 @@ function EmployeeCreate({ handleCloseModal, isReset }) {
         <Row gutter={24} justify={"start"}>
           <Col span={12}>
             <Form.Item name="username" label="Tài khoản">
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
-        </Row>
-        <Row justify="end">
-          <Space>
-            <Button
-              className="ant-btn delete"
-              icon={<CloseOutlined />}
-              onClick={handleCloseModal}
-            >
-              Đóng
-            </Button>
-            <Button
-              className="ant-btn new"
-              htmlType="submit"
-              type="primary"
-              icon={<SettingOutlined />}
-            >
-              Xác nhận
-            </Button>
-          </Space>
         </Row>
       </Form>
     </>
   );
 }
 
-export default EmployeeCreate;
+export default EmployeeDetail;
