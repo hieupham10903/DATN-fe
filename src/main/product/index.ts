@@ -4,6 +4,8 @@ import { PaginationStateWithQuery } from "../common/common.ts";
 import {
   createProduct,
   getImage,
+  getListStatisticByCategory,
+  getListStatisticPayment,
   getMultipleImages,
   listAllCategory,
   listAllWarehouse,
@@ -41,6 +43,14 @@ const ProductHook = () => {
 
   const listWarehouse = useSelector(
     (state: RootState) => state.product.listWarehouse
+  );
+
+  const listStatisticByCategory = useSelector(
+    (state: RootState) => state.product.listStatisticByCategory
+  );
+
+  const listStatisticPayment = useSelector(
+    (state: RootState) => state.product.listStatisticPayment
   );
 
   const GetDataSearch = (paginationState) => {
@@ -93,6 +103,14 @@ const ProductHook = () => {
     dispatch(listAllWarehouse(body));
   };
 
+  const GetListStatisticByCategory = () => {
+    dispatch(getListStatisticByCategory());
+  };
+
+  const GetListStatisticPayment = (body: any) => {
+    dispatch(getListStatisticPayment(body));
+  };
+
   return {
     GetDataSearch,
     listProduct,
@@ -111,6 +129,10 @@ const ProductHook = () => {
     listCategory,
     ListAllWarehouse,
     listWarehouse,
+    GetListStatisticByCategory,
+    listStatisticByCategory,
+    GetListStatisticPayment,
+    listStatisticPayment,
   };
 };
 export default ProductHook;

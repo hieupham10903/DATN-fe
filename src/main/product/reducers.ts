@@ -12,12 +12,16 @@ const initialState = {
   detailImages: [] as string[],
   listCategory: [] as any,
   listWarehouse: [] as any,
+  listStatisticByCategory: [] as any,
+  listStatisticPayment: [] as any,
 };
 
 const apiSearchProduct = "/api/search-product";
 const apiCreateProduct = "/api/create-product";
 const apiGetAllCategory = "/api/get-all-category";
 const apiGetAllWarehouse = "/api/get-all-warehouse";
+const apiStatisticByCategory = "/api/statistic-by-category";
+const apiStatisticPayment = "/api/payment/payment-statistic-by-month";
 
 export const searchProduct = createAsyncThunk(
   "product/searchProduct",
@@ -114,6 +118,24 @@ export const listAllWarehouse = createAsyncThunk(
   }
 );
 
+export const getListStatisticByCategory = createAsyncThunk(
+  "product/getListStatisticByCategory",
+  async () => {
+    const response = await axiosClient.get<any>(apiStatisticByCategory);
+    return response;
+  }
+);
+
+export const getListStatisticPayment = createAsyncThunk(
+  "product/getListStatisticPayment",
+  async (body: any) => {
+    const response = await axiosClient.get<any>(apiStatisticPayment, {
+      params: body,
+    });
+    return response.data;
+  }
+);
+
 const productReducer = createSlice({
   name: "productReducer",
   initialState,
@@ -166,6 +188,12 @@ const productReducer = createSlice({
       })
       .addCase(listAllWarehouse.fulfilled, (state, action) => {
         state.listWarehouse = action.payload.data;
+      })
+      .addCase(getListStatisticByCategory.fulfilled, (state, action) => {
+        state.listStatisticByCategory = action.payload.data;
+      })
+      .addCase(getListStatisticPayment.fulfilled, (state, action) => {
+        state.listStatisticPayment = action.payload;
       });
   },
 });
