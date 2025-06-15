@@ -4,7 +4,9 @@ import axiosClient from "../common/axiosClient.ts";
 const initialState = {
   isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
   registerSuccess: false,
-  userInfo: undefined as any,
+  userInfo: localStorage.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo")!)
+    : undefined,
 };
 
 export const login = createAsyncThunk("user/login", async (body: any) => {
@@ -41,8 +43,9 @@ const userReducer = createSlice({
     },
     logout: (state) => {
       state.isAuthenticated = false;
-      localStorage.removeItem("isAuthenticated");
       state.userInfo = undefined;
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("userInfo");
     },
   },
   extraReducers: (builder) => {
@@ -67,12 +70,15 @@ const userReducer = createSlice({
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.userInfo = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
       })
       .addCase(getUserInfo.pending, (state, action) => {
         state.userInfo = undefined;
+        localStorage.removeItem("userInfo");
       })
       .addCase(getUserInfo.rejected, (state, action) => {
         state.userInfo = undefined;
+        localStorage.removeItem("userInfo");
       });
   },
 });

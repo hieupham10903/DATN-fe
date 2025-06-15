@@ -14,6 +14,8 @@ const initialState = {
   listWarehouse: [] as any,
   listStatisticByCategory: [] as any,
   listStatisticPayment: [] as any,
+  listAllProduct: [] as any,
+  listAllPayment: [] as any,
 };
 
 const apiSearchProduct = "/api/search-product";
@@ -22,6 +24,8 @@ const apiGetAllCategory = "/api/get-all-category";
 const apiGetAllWarehouse = "/api/get-all-warehouse";
 const apiStatisticByCategory = "/api/statistic-by-category";
 const apiStatisticPayment = "/api/payment/payment-statistic-by-month";
+const apiGetAllProductInfo = "/api/get-all-products-info";
+const apiGetAllPayment = "/api/payment/get-all-payment-by-date";
 
 export const searchProduct = createAsyncThunk(
   "product/searchProduct",
@@ -126,6 +130,24 @@ export const getListStatisticByCategory = createAsyncThunk(
   }
 );
 
+export const getListAllPayment = createAsyncThunk(
+  "product/getListAllPayment",
+  async (body: any) => {
+    const response = await axiosClient.get<any>(apiGetAllPayment, {
+      params: body,
+    });
+    return response.data;
+  }
+);
+
+export const getAllProductInfo = createAsyncThunk(
+  "product/getAllProductInfo",
+  async () => {
+    const response = await axiosClient.get<any>(apiGetAllProductInfo);
+    return response;
+  }
+);
+
 export const getListStatisticPayment = createAsyncThunk(
   "product/getListStatisticPayment",
   async (body: any) => {
@@ -194,6 +216,12 @@ const productReducer = createSlice({
       })
       .addCase(getListStatisticPayment.fulfilled, (state, action) => {
         state.listStatisticPayment = action.payload;
+      })
+      .addCase(getAllProductInfo.fulfilled, (state, action) => {
+        state.listAllProduct = action.payload.data;
+      })
+      .addCase(getListAllPayment.fulfilled, (state, action) => {
+        state.listAllPayment = action.payload.data;
       });
   },
 });

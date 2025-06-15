@@ -10,7 +10,9 @@ import {
 } from "@ant-design/icons";
 import {
   Alert,
+  Button,
   Col,
+  DatePicker,
   Layout,
   Row,
   Space,
@@ -21,6 +23,7 @@ import {
 } from "antd";
 import Card from "antd/es/card/Card";
 
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import ProductHook from "../product/index.ts";
 
@@ -196,20 +199,21 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
   };
 
   return (
-    <div style={{ padding: "16px", height: "100%" }}>
+    <div style={{ padding: "16px", height: "100%", overflow: "hidden" }}>
       <div
         style={{
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           alignItems: "flex-end",
-          height: "350px",
+          height: "300px",
           width: "100%",
           marginBottom: "16px",
-          padding: "0 10px",
+          padding: "0 20px",
+          overflow: "hidden",
         }}
       >
         {data.map((item, index) => {
-          const height = (item.totalAmount / maxAmount) * 300;
+          const height = (item.totalAmount / maxAmount) * 250;
           const color = COLORS[index % COLORS.length];
 
           return (
@@ -219,8 +223,10 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                width: `${100 / data.length}%`,
-                maxWidth: "120px",
+                flex: 1,
+                maxWidth: "150px",
+                minWidth: "80px",
+                margin: "0 4px",
               }}
             >
               {/* Số tiền */}
@@ -229,11 +235,14 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                   textAlign: "center",
                   marginBottom: "8px",
                   color,
-                  fontSize: "14px",
+                  fontSize: "12px",
                   fontWeight: "bold",
-                  minHeight: "32px",
+                  minHeight: "40px",
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: "center",
+                  wordBreak: "break-word",
+                  lineHeight: "1.2",
                 }}
               >
                 {formatCurrency(item.totalAmount)}
@@ -241,13 +250,14 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
               {/* Cột */}
               <div
                 style={{
-                  width: "50px",
+                  width: "40px",
                   height: `${Math.max(height, 20)}px`,
                   background: `linear-gradient(180deg, ${color} 0%, ${color}80 100%)`,
-                  borderRadius: "8px 8px 4px 4px",
+                  borderRadius: "6px 6px 2px 2px",
                   boxShadow: `0 4px 12px ${color}40`,
                   position: "relative",
                   transition: "all 0.3s ease",
+                  margin: "0 auto",
                 }}
               >
                 {/* Hiệu ứng sáng */}
@@ -260,7 +270,7 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                     height: "30%",
                     background:
                       "linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)",
-                    borderRadius: "8px 8px 0 0",
+                    borderRadius: "6px 6px 0 0",
                   }}
                 />
               </div>
@@ -269,7 +279,7 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                 style={{
                   textAlign: "center",
                   marginTop: "8px",
-                  fontSize: "13px",
+                  fontSize: "11px",
                   color: "#666",
                   fontWeight: "500",
                 }}
@@ -288,6 +298,7 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
           borderRadius: "12px",
           padding: "16px",
           color: "white",
+          marginTop: "20px",
         }}
       >
         <Row gutter={16}>
@@ -296,7 +307,13 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
               <div style={{ fontSize: "14px", opacity: 0.8 }}>
                 Tổng doanh thu
               </div>
-              <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+              <div
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  wordBreak: "break-word",
+                }}
+              >
                 {formatCurrency(
                   data.reduce((sum, item) => sum + item.totalAmount, 0)
                 )}
@@ -308,7 +325,13 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
               <div style={{ fontSize: "14px", opacity: 0.8 }}>
                 Trung bình/tháng
               </div>
-              <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+              <div
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "bold",
+                  wordBreak: "break-word",
+                }}
+              >
                 {formatCurrency(
                   data.reduce((sum, item) => sum + item.totalAmount, 0) /
                     data.length
@@ -328,9 +351,16 @@ const HomePage = () => {
     listStatisticByCategory,
     GetListStatisticPayment,
     listStatisticPayment,
+    GetAllProductInfo,
+    listAllProduct,
+    GetListAllPayment,
+    listAllPayment,
+    exportProductToExcel,
+    exportRevenueToExcel,
   } = ProductHook();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
+  const [revenueReportDateRange, setRevenueReportDateRange] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -338,10 +368,7 @@ const HomePage = () => {
         setLoading(true);
         setError(null);
         await GetListStatisticByCategory();
-        await GetListStatisticPayment({
-          startDate: "2025-02-01",
-          endDate: "2025-06-01",
-        });
+        await GetAllProductInfo();
       } catch (err) {
         setError("Không thể tải dữ liệu thống kê. Vui lòng thử lại.");
         console.error("Error fetching statistics:", err);
@@ -352,6 +379,43 @@ const HomePage = () => {
 
     fetchData();
   }, []);
+
+  const handleProductReport = () => {
+    exportProductToExcel(listAllProduct);
+  };
+
+  const handleRevenueReport = () => {
+    if (!revenueReportDateRange[0] || !revenueReportDateRange[1]) {
+      alert("Vui lòng chọn khoảng thời gian cho báo cáo doanh thu");
+      return;
+    }
+    if (revenueReportDateRange.length === 2) {
+      GetListStatisticPayment({
+        startDate: dayjs(revenueReportDateRange[0]).format("YYYY-MM-DD"),
+        endDate: dayjs(revenueReportDateRange[1]).format("YYYY-MM-DD"),
+      });
+      GetListAllPayment({
+        startDate: revenueReportDateRange[0],
+        endDate: revenueReportDateRange[1],
+      }).then((value) => {
+        exportRevenueToExcel(value.payload);
+      });
+    }
+  };
+
+  const handleDateRangeChange = (dates) => {
+    if (dates && dates.length === 2) {
+      const [start, end] = dates;
+
+      const startDate = dayjs(start)
+        .startOf("day")
+        .format("YYYY-MM-DDTHH:mm:ss");
+      const endDate = dayjs(end).endOf("day").format("YYYY-MM-DDTHH:mm:ss");
+      setRevenueReportDateRange([startDate, endDate]);
+    } else {
+      setRevenueReportDateRange([]);
+    }
+  };
 
   // Hiển thị loading
   if (loading) {
@@ -758,6 +822,178 @@ const HomePage = () => {
                 style={{ height: "500px", borderRadius: "12px" }}
               >
                 <RevenueBarChartComponent data={listStatisticPayment || []} />
+              </Card>
+            </Col>
+          </Row>
+
+          {/* Section Báo cáo */}
+          <Row gutter={[32, 32]}>
+            <Col xs={24}>
+              <Card
+                title="Báo cáo & Xuất dữ liệu"
+                style={{
+                  borderRadius: "12px",
+                  marginTop: "24px",
+                }}
+                headStyle={{
+                  borderBottom: "1px solid #f0f0f0",
+                  borderRadius: "16px 16px 0 0",
+                }}
+                bodyStyle={{
+                  padding: "24px",
+                }}
+              >
+                <Row gutter={[32, 24]} align="top">
+                  {/* Báo cáo sản phẩm */}
+                  <Col xs={24} lg={12}>
+                    <div style={{ height: "100%" }}>
+                      <Card
+                        size="small"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                          border: "none",
+                          borderRadius: "12px",
+                          height: "280px",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                        bodyStyle={{
+                          padding: "24px",
+                          flex: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <div style={{ color: "white", marginBottom: "16px" }}>
+                            <Title
+                              level={4}
+                              style={{
+                                color: "white",
+                                margin: 0,
+                                marginBottom: "8px",
+                              }}
+                            >
+                              <ShoppingOutlined style={{ marginRight: 8 }} />
+                              Báo cáo sản phẩm
+                            </Title>
+                            <Text
+                              style={{
+                                color: "rgba(255,255,255,0.8)",
+                                fontSize: "14px",
+                              }}
+                            >
+                              Xuất danh sách tất cả sản phẩm ra file Excel
+                            </Text>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="primary"
+                          size="large"
+                          onClick={handleProductReport}
+                          style={{
+                            background: "rgba(255,255,255,0.2)",
+                            border: "1px solid rgba(255,255,255,0.3)",
+                            color: "white",
+                            fontWeight: "bold",
+                            borderRadius: "8px",
+                            width: "100%",
+                            height: "48px",
+                          }}
+                          icon={<BarChartOutlined />}
+                        >
+                          Xuất báo cáo sản phẩm
+                        </Button>
+                      </Card>
+                    </div>
+                  </Col>
+
+                  {/* Báo cáo doanh thu */}
+                  <Col xs={24} lg={12}>
+                    <div style={{ height: "100%" }}>
+                      <Card
+                        size="small"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+                          border: "none",
+                          borderRadius: "12px",
+                          height: "280px",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                        bodyStyle={{
+                          padding: "24px",
+                          flex: 1,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <div style={{ marginBottom: "16px" }}>
+                            <Title
+                              level={4}
+                              style={{
+                                color: "#d4380d",
+                                margin: 0,
+                                marginBottom: "8px",
+                              }}
+                            >
+                              <DollarOutlined style={{ marginRight: 8 }} />
+                              Báo cáo doanh thu
+                            </Title>
+                            <Text
+                              style={{ color: "#ad4e00", fontSize: "14px" }}
+                            >
+                              Chọn khoảng thời gian và xuất báo cáo doanh thu
+                            </Text>
+                          </div>
+
+                          <div style={{ marginBottom: "16px" }}>
+                            <Text
+                              strong
+                              style={{
+                                color: "#ad4e00",
+                                display: "block",
+                                marginBottom: "8px",
+                              }}
+                            >
+                              Chọn khoảng thời gian:
+                            </Text>
+                            <DatePicker.RangePicker
+                              style={{ width: "100%" }}
+                              placeholder={["Từ ngày", "Đến ngày"]}
+                              format="DD/MM/YYYY"
+                              onChange={handleDateRangeChange}
+                              size="large"
+                            />
+                          </div>
+                        </div>
+
+                        <Button
+                          type="primary"
+                          size="large"
+                          onClick={handleRevenueReport}
+                          style={{
+                            background: "#d4380d",
+                            border: "none",
+                            fontWeight: "bold",
+                            borderRadius: "8px",
+                            width: "100%",
+                            height: "48px",
+                          }}
+                          icon={<BarChartOutlined />}
+                        >
+                          Xuất báo cáo doanh thu
+                        </Button>
+                      </Card>
+                    </div>
+                  </Col>
+                </Row>
               </Card>
             </Col>
           </Row>

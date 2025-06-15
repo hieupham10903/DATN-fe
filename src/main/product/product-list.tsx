@@ -194,7 +194,7 @@ const ProductList = () => {
       },
     },
     {
-      title: "Mã kho",
+      title: "Tên kho",
       dataIndex: "warehouseId",
       key: "warehouseId",
       align: "center",
