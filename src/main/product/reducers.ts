@@ -16,6 +16,7 @@ const initialState = {
   listStatisticPayment: [] as any,
   listAllProduct: [] as any,
   listAllPayment: [] as any,
+  totalRevenue: null as string | null,
 };
 
 const apiSearchProduct = "/api/search-product";
@@ -26,6 +27,7 @@ const apiStatisticByCategory = "/api/statistic-by-category";
 const apiStatisticPayment = "/api/payment/payment-statistic-by-month";
 const apiGetAllProductInfo = "/api/get-all-products-info";
 const apiGetAllPayment = "/api/payment/get-all-payment-by-date";
+const apiGetTotalRevenue = "/api/payment/total-revenue";
 
 export const searchProduct = createAsyncThunk(
   "product/searchProduct",
@@ -158,6 +160,14 @@ export const getListStatisticPayment = createAsyncThunk(
   }
 );
 
+export const getTotalRevenue = createAsyncThunk(
+  "product/getTotalRevenue",
+  async () => {
+    const response = await axiosClient.get<any>(apiGetTotalRevenue);
+    return response;
+  }
+);
+
 const productReducer = createSlice({
   name: "productReducer",
   initialState,
@@ -222,6 +232,9 @@ const productReducer = createSlice({
       })
       .addCase(getListAllPayment.fulfilled, (state, action) => {
         state.listAllPayment = action.payload.data;
+      })
+      .addCase(getTotalRevenue.fulfilled, (state, action) => {
+        state.totalRevenue = action.payload.data;
       });
   },
 });

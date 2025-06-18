@@ -173,9 +173,16 @@ const SimplePieChartComponent = ({ data }: { data: any[] }) => {
   );
 };
 
-// Biểu đồ cột doanh thu
+// Biểu đồ doanh thu theo tháng - Dạng line chart đơn giản
 const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
-  if (!data || data.length === 0) {
+  // Sắp xếp data theo thứ tự tháng tăng dần
+  const sortedData = [...data].sort((a, b) => {
+    const dateA = new Date(a.month + "-01");
+    const dateB = new Date(b.month + "-01");
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  if (!sortedData || sortedData.length === 0) {
     return (
       <div style={{ padding: "40px", textAlign: "center", color: "#999" }}>
         <BarChartOutlined style={{ fontSize: "48px", marginBottom: "16px" }} />
@@ -184,7 +191,6 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
     );
   }
 
-  const maxAmount = Math.max(...data.map((item) => item.totalAmount));
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -198,97 +204,101 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
     return `${monthNum}/${year}`;
   };
 
-  return (
-    <div style={{ padding: "16px", height: "100%", overflow: "hidden" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          height: "300px",
-          width: "100%",
-          marginBottom: "16px",
-          padding: "0 20px",
-          overflow: "hidden",
-        }}
-      >
-        {data.map((item, index) => {
-          const height = (item.totalAmount / maxAmount) * 250;
-          const color = COLORS[index % COLORS.length];
+  const maxAmount = Math.max(...sortedData.map((item) => item.totalAmount));
+  const minAmount = Math.min(...sortedData.map((item) => item.totalAmount));
 
-          return (
-            <div
-              key={item.month}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                flex: 1,
-                maxWidth: "150px",
-                minWidth: "80px",
-                margin: "0 4px",
-              }}
-            >
-              {/* Số tiền */}
+  return (
+    <div
+      style={{
+        padding: "20px",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Biểu đồ đơn giản dạng bar chart */}
+      <div style={{ flex: 1, marginBottom: "20px" }}>
+        <h3
+          style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}
+        >
+          Biểu đồ doanh thu theo tháng
+        </h3>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "end",
+            justifyContent: "space-around",
+            height: "300px",
+            border: "1px solid #e8e8e8",
+            borderRadius: "8px",
+            padding: "50px 20px 20px 20px",
+            background: "#fafafa",
+          }}
+        >
+          {/* Keep the existing bar chart mapping code unchanged */}
+          {sortedData.map((item, index) => {
+            const heightRatio =
+              maxAmount > 0 ? item.totalAmount / maxAmount : 0;
+            const height = Math.max(heightRatio * 200, 20);
+
+            return (
               <div
+                key={index}
                 style={{
-                  textAlign: "center",
-                  marginBottom: "8px",
-                  color,
-                  fontSize: "12px",
-                  fontWeight: "bold",
-                  minHeight: "40px",
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "center",
-                  wordBreak: "break-word",
-                  lineHeight: "1.2",
+                  flex: 1,
+                  maxWidth: "150px",
                 }}
               >
-                {formatCurrency(item.totalAmount)}
-              </div>
-              {/* Cột */}
-              <div
-                style={{
-                  width: "40px",
-                  height: `${Math.max(height, 20)}px`,
-                  background: `linear-gradient(180deg, ${color} 0%, ${color}80 100%)`,
-                  borderRadius: "6px 6px 2px 2px",
-                  boxShadow: `0 4px 12px ${color}40`,
-                  position: "relative",
-                  transition: "all 0.3s ease",
-                  margin: "0 auto",
-                }}
-              >
-                {/* Hiệu ứng sáng */}
+                {/* Giá trị */}
                 <div
                   style={{
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    right: "0",
-                    height: "30%",
-                    background:
-                      "linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)",
-                    borderRadius: "6px 6px 0 0",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    color: "#1890ff",
+                    marginBottom: "8px",
+                    textAlign: "center",
+                    background: "white",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    border: "1px solid #1890ff",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {formatCurrency(item.totalAmount)}
+                </div>
+
+                {/* Cột với height tỷ lệ thực tế */}
+                <div
+                  style={{
+                    width: "40px",
+                    height: `${height}px`,
+                    background: "linear-gradient(to top, #1890ff, #40a9ff)",
+                    borderRadius: "4px 4px 0 0",
+                    marginBottom: "8px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
                   }}
                 />
+
+                {/* Tháng */}
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "#666",
+                    fontWeight: "500",
+                    textAlign: "center",
+                  }}
+                >
+                  {formatMonth(item.month)}
+                </div>
               </div>
-              {/* Tháng */}
-              <div
-                style={{
-                  textAlign: "center",
-                  marginTop: "8px",
-                  fontSize: "11px",
-                  color: "#666",
-                  fontWeight: "500",
-                }}
-              >
-                {formatMonth(item.month)}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Thống kê tổng quan doanh thu */}
@@ -298,7 +308,7 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
           borderRadius: "12px",
           padding: "16px",
           color: "white",
-          marginTop: "20px",
+          marginTop: "auto",
         }}
       >
         <Row gutter={16}>
@@ -315,7 +325,7 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                 }}
               >
                 {formatCurrency(
-                  data.reduce((sum, item) => sum + item.totalAmount, 0)
+                  sortedData.reduce((sum, item) => sum + item.totalAmount, 0)
                 )}
               </div>
             </div>
@@ -333,8 +343,8 @@ const RevenueBarChartComponent = ({ data }: { data: any[] }) => {
                 }}
               >
                 {formatCurrency(
-                  data.reduce((sum, item) => sum + item.totalAmount, 0) /
-                    data.length
+                  sortedData.reduce((sum, item) => sum + item.totalAmount, 0) /
+                    sortedData.length
                 )}
               </div>
             </div>
@@ -357,6 +367,8 @@ const HomePage = () => {
     listAllPayment,
     exportProductToExcel,
     exportRevenueToExcel,
+    GetTotalRevenue,
+    totalRevenue,
   } = ProductHook();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -369,6 +381,7 @@ const HomePage = () => {
         setError(null);
         await GetListStatisticByCategory();
         await GetAllProductInfo();
+        await GetTotalRevenue();
       } catch (err) {
         setError("Không thể tải dữ liệu thống kê. Vui lòng thử lại.");
         console.error("Error fetching statistics:", err);
@@ -390,10 +403,6 @@ const HomePage = () => {
       return;
     }
     if (revenueReportDateRange.length === 2) {
-      GetListStatisticPayment({
-        startDate: dayjs(revenueReportDateRange[0]).format("YYYY-MM-DD"),
-        endDate: dayjs(revenueReportDateRange[1]).format("YYYY-MM-DD"),
-      });
       GetListAllPayment({
         startDate: revenueReportDateRange[0],
         endDate: revenueReportDateRange[1],
@@ -402,6 +411,15 @@ const HomePage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (revenueReportDateRange.length === 2) {
+      GetListStatisticPayment({
+        startDate: dayjs(revenueReportDateRange[0]).format("YYYY-MM-DD"),
+        endDate: dayjs(revenueReportDateRange[1]).format("YYYY-MM-DD"),
+      });
+    }
+  }, [revenueReportDateRange]);
 
   const handleDateRangeChange = (dates) => {
     if (dates && dates.length === 2) {
@@ -557,10 +575,7 @@ const HomePage = () => {
     listStatisticByCategory[0] || {}
   );
 
-  // Tính toán doanh thu
-  const totalRevenue =
-    listStatisticPayment?.reduce((sum, item) => sum + item.totalAmount, 0) || 0;
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: any) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
@@ -819,7 +834,7 @@ const HomePage = () => {
             <Col xs={24}>
               <Card
                 title="Biểu đồ doanh thu theo tháng"
-                style={{ height: "500px", borderRadius: "12px" }}
+                style={{ height: "600px", borderRadius: "12px" }}
               >
                 <RevenueBarChartComponent data={listStatisticPayment || []} />
               </Card>

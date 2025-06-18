@@ -9,6 +9,7 @@ import {
   getListStatisticByCategory,
   getListStatisticPayment,
   getMultipleImages,
+  getTotalRevenue,
   listAllCategory,
   listAllWarehouse,
   resetState,
@@ -64,6 +65,10 @@ const ProductHook = () => {
 
   const listAllPayment = useSelector(
     (state: RootState) => state.product.listAllPayment
+  );
+
+  const totalRevenue = useSelector(
+    (state: RootState) => state.product.totalRevenue
   );
 
   const GetDataSearch = (paginationState) => {
@@ -133,11 +138,9 @@ const ProductHook = () => {
   };
 
   const exportProductToExcel = async (products) => {
-    // Tạo workbook và worksheet mới
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Danh sách sản phẩm");
 
-    // Định nghĩa cột
     worksheet.columns = [
       { key: "stt", width: 10 },
       { key: "code", width: 15 },
@@ -148,7 +151,6 @@ const ProductHook = () => {
       { key: "stockQuantity", width: 15 },
     ];
 
-    // Thêm tiêu đề "BÁO CÁO SẢN PHẨM"
     worksheet.mergeCells("A1:G1");
     const titleRow = worksheet.getCell("A1");
     titleRow.value = "BÁO CÁO SẢN PHẨM";
@@ -162,11 +164,9 @@ const ProductHook = () => {
     };
     worksheet.getRow(1).height = 30;
 
-    // Thêm hàng trống
     worksheet.addRow([""]);
     worksheet.getRow(2).height = 10;
 
-    // Thêm tiêu đề cột
     const headers = [
       "STT",
       "Mã",
@@ -193,7 +193,6 @@ const ProductHook = () => {
     });
     worksheet.getRow(3).height = 20;
 
-    // Thêm dữ liệu
     products.forEach((item, index) => {
       const row = worksheet.addRow({
         stt: index + 1,
@@ -220,7 +219,6 @@ const ProductHook = () => {
       });
     });
 
-    // Xuất file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -229,11 +227,9 @@ const ProductHook = () => {
   };
 
   const exportRevenueToExcel = async (revenues) => {
-    // Tạo workbook và worksheet mới
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Danh sách doanh thu");
 
-    // Định nghĩa cột
     worksheet.columns = [
       { key: "stt", width: 10 },
       { key: "id", width: 35 },
@@ -244,7 +240,6 @@ const ProductHook = () => {
       { key: "status", width: 15 },
     ];
 
-    // Thêm tiêu đề "BÁO CÁO DOANH THU"
     worksheet.mergeCells("A1:G1");
     const titleRow = worksheet.getCell("A1");
     titleRow.value = "BÁO CÁO DOANH THU";
@@ -258,11 +253,9 @@ const ProductHook = () => {
     };
     worksheet.getRow(1).height = 30;
 
-    // Thêm hàng trống
     worksheet.addRow([""]);
     worksheet.getRow(2).height = 10;
 
-    // Thêm tiêu đề cột
     const headers = [
       "STT",
       "Mã",
@@ -289,7 +282,6 @@ const ProductHook = () => {
     });
     worksheet.getRow(3).height = 20;
 
-    // Hàm ánh xạ trạng thái và phương thức
     const mapStatus = (status) => {
       switch (status) {
         case "paid":
@@ -314,7 +306,6 @@ const ProductHook = () => {
       }
     };
 
-    // Thêm dữ liệu
     revenues.forEach((item, index) => {
       const row = worksheet.addRow({
         stt: index + 1,
@@ -348,12 +339,15 @@ const ProductHook = () => {
       });
     });
 
-    // Xuất file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     saveAs(blob, "BaoCaoDoanhThu.xlsx");
+  };
+
+  const GetTotalRevenue = () => {
+    return dispatch(getTotalRevenue());
   };
 
   return {
@@ -384,6 +378,8 @@ const ProductHook = () => {
     listAllPayment,
     exportProductToExcel,
     exportRevenueToExcel,
+    GetTotalRevenue,
+    totalRevenue,
   };
 };
 export default ProductHook;
