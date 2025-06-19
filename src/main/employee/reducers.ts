@@ -13,6 +13,7 @@ const initialState = {
   employee: undefined as any,
   error: null,
   updateSuccess: false,
+  listAllUser: [] as any[],
 };
 
 const apiSearchEmployee = "/api/search-employee";
@@ -20,6 +21,7 @@ const apiCreateEmployee = "/api/create-employee";
 const apiUpdateEmployee = "/api/update-employee";
 const apiDeleteEmployee = "/api/delete-employee";
 const apiGetDetailEmployee = "/api/get-employee-by-id";
+const apiGetAllUser = "/api/get-all-employee";
 
 export const searchEmployee = createAsyncThunk(
   "employee/searchEmployee",
@@ -66,6 +68,11 @@ export const getDetailEmployee = createAsyncThunk(
   }
 );
 
+export const getAllUser = createAsyncThunk("employee/getAllUser", async () => {
+  const response = await axiosClient.post<any>(apiGetAllUser);
+  return response;
+});
+
 const employeeReducer = createSlice({
   name: "employeeReducer",
   initialState,
@@ -80,6 +87,9 @@ const employeeReducer = createSlice({
       })
       .addCase(getDetailEmployee.fulfilled, (state, action) => {
         state.employee = action.payload.data;
+      })
+      .addCase(getAllUser.fulfilled, (state, action) => {
+        state.listAllUser = action.payload.data;
       })
       .addMatcher(
         isFulfilled(createEmployee, updateEmployee, deleteEmployee),

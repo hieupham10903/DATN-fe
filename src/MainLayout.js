@@ -142,6 +142,9 @@ const MainLayout = ({ children }) => {
                     <Menu.Item key="warehouses" onClick={() => handleTopMenuClick("warehouses")}>
                         <Link to="/warehouse-list">Danh sách kho</Link>
                     </Menu.Item>
+                    <Menu.Item key="payment" onClick={() => handleTopMenuClick("warehouses")}>
+                        <Link to="/payment-list">Danh sách đơn hàng</Link>
+                    </Menu.Item>
                 </Menu>
 
                 <div

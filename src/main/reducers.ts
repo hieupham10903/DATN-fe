@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import categoryReducer from "../main/category/reducers.ts";
 import employeeReducer from "../main/employee/reducers.ts";
 import userReducer from "../main/login/reducers.ts";
+import paymentReducer from "../main/payment/reducers.ts";
 import productReducer from "../main/product/reducers.ts";
 import warehouseReducer from "../main/warehouse/reducers.ts";
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     product: productReducer,
     category: categoryReducer,
     warehouse: warehouseReducer,
+    payment: paymentReducer,
   },
 });
 

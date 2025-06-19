@@ -4,6 +4,7 @@ import { PaginationStateWithQuery } from "../common/common.ts";
 import {
   createEmployee,
   deleteEmployee,
+  getAllUser,
   getDetailEmployee,
   searchEmployee,
   updateEmployee,
@@ -22,6 +23,10 @@ const EmployeeHook = () => {
     (state: RootState) => state.employee.updateSuccess
   );
   const employee = useSelector((state: RootState) => state.employee.employee);
+
+  const listAllUser = useSelector(
+    (state: RootState) => state.employee.listAllUser
+  );
 
   const GetDataSearch = (paginationState) => {
     const handlePaginationState = {
@@ -57,6 +62,10 @@ const EmployeeHook = () => {
     dispatch(getDetailEmployee(id));
   };
 
+  const GetAllUser = () => {
+    dispatch(getAllUser());
+  };
+
   return {
     GetDataSearch,
     listEmployee,
@@ -67,6 +76,8 @@ const EmployeeHook = () => {
     DeleteEmployee,
     GetDetailEmployee,
     employee,
+    GetAllUser,
+    listAllUser,
   };
 };
 export default EmployeeHook;
