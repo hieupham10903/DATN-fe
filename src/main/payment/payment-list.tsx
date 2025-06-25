@@ -1,4 +1,4 @@
-import { SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -6,6 +6,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Modal,
   Row,
   Select,
   Table,
@@ -22,11 +23,15 @@ import {
 } from "../common/data-search.ts";
 import EmployeeHook from "../employee/index.ts";
 import CategoryHook from "./index.ts";
+import PaymentDetail from "./payment-detail.tsx";
 dayjs.extend(utc);
 
 const PaymentList = () => {
   const { GetDataSearch, listPayment, totalPayment } = CategoryHook();
   const { GetAllUser, listAllUser } = EmployeeHook();
+
+  const [record, setRecord] = useState(undefined);
+  const [visibleDetail, setVisibleDetail] = useState(false);
 
   const [pagination, setPagination] = useState({
     current: 1,
@@ -178,99 +183,135 @@ const PaymentList = () => {
       align: "center",
       render: (value) => statusMap[value] || value,
     },
+    {
+      title: "Hành động",
+      key: "action",
+      align: "center",
+      render: (_, record) => (
+        <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+          <Button
+            shape="circle"
+            icon={<EyeOutlined />}
+            className="ant-btn detail"
+            onClick={() => handleOpenDetail(record)}
+          />
+        </div>
+      ),
+    },
   ];
 
+  const handleOpenDetail = (record) => {
+    setRecord(record);
+    setVisibleDetail(true);
+  };
+
+  const handleCloseDetail = (record) => {
+    setRecord(record);
+    setVisibleDetail(false);
+  };
+
   return (
-    <div>
-      <h2>Danh sách danh mục đơn hàng</h2>
+    <>
+      <Modal
+        title="Chi tiết người dùng"
+        onCancel={handleCloseDetail}
+        width={1500}
+        visible={visibleDetail}
+        footer={null}
+      >
+        <PaymentDetail handleCloseModal={handleCloseDetail} record={record} />
+      </Modal>
+      <div>
+        <h2>Danh sách danh mục đơn hàng</h2>
 
-      <Form layout="inline" style={{ marginBottom: 20 }}>
-        <Row gutter={16} style={{ width: "100%", marginBottom: 10 }}>
-          <Col>
-            <Form.Item>
-              <Select
-                value={searchField}
-                onChange={handleChangeSearch}
-                style={{ width: 180 }}
-                options={DataSearchPayment}
-              />
-            </Form.Item>
-          </Col>
-          <Col flex="auto">
-            <Form.Item>
-              {ObjectTypePayment[searchField] === "text" ? (
-                <Input
-                  placeholder="Nhập từ khóa"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                />
-              ) : ObjectTypePayment[searchField] === "select" ? (
+        <Form layout="inline" style={{ marginBottom: 20 }}>
+          <Row gutter={16} style={{ width: "100%", marginBottom: 10 }}>
+            <Col>
+              <Form.Item>
                 <Select
-                  value={searchText}
-                  onChange={(value) => setSearchText(value)}
-                  style={{ width: "100%" }}
-                  options={options}
+                  value={searchField}
+                  onChange={handleChangeSearch}
+                  style={{ width: 180 }}
+                  options={DataSearchPayment}
                 />
-              ) : ObjectTypePayment[searchField] === "rangeDate" ? (
-                <DatePicker.RangePicker
-                  style={{ width: "100%" }}
-                  value={searchText}
-                  onChange={(value) => setSearchText(value)}
-                  format="DD/MM/YYYY"
-                />
-              ) : ObjectTypePayment[searchField] === "number" ? (
-                <Row gutter={8}>
-                  <Col span={12}>
-                    <InputNumber
-                      placeholder="Từ"
-                      style={{ width: "100%" }}
-                      value={searchText?.[0]}
-                      onChange={(value) =>
-                        setSearchText([value, searchText?.[1] ?? null])
-                      }
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <InputNumber
-                      placeholder="Đến"
-                      style={{ width: "100%" }}
-                      value={searchText?.[1]}
-                      onChange={(value) =>
-                        setSearchText([searchText?.[0] ?? null, value])
-                      }
-                    />
-                  </Col>
-                </Row>
-              ) : null}
-            </Form.Item>
-          </Col>
+              </Form.Item>
+            </Col>
+            <Col flex="auto">
+              <Form.Item>
+                {ObjectTypePayment[searchField] === "text" ? (
+                  <Input
+                    placeholder="Nhập từ khóa"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                  />
+                ) : ObjectTypePayment[searchField] === "select" ? (
+                  <Select
+                    value={searchText}
+                    onChange={(value) => setSearchText(value)}
+                    style={{ width: "100%" }}
+                    options={options}
+                  />
+                ) : ObjectTypePayment[searchField] === "rangeDate" ? (
+                  <DatePicker.RangePicker
+                    style={{ width: "100%" }}
+                    value={searchText}
+                    onChange={(value) => setSearchText(value)}
+                    format="DD/MM/YYYY"
+                  />
+                ) : ObjectTypePayment[searchField] === "number" ? (
+                  <Row gutter={8}>
+                    <Col span={12}>
+                      <InputNumber
+                        placeholder="Từ"
+                        style={{ width: "100%" }}
+                        value={searchText?.[0]}
+                        onChange={(value) =>
+                          setSearchText([value, searchText?.[1] ?? null])
+                        }
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <InputNumber
+                        placeholder="Đến"
+                        style={{ width: "100%" }}
+                        value={searchText?.[1]}
+                        onChange={(value) =>
+                          setSearchText([searchText?.[0] ?? null, value])
+                        }
+                      />
+                    </Col>
+                  </Row>
+                ) : null}
+              </Form.Item>
+            </Col>
 
-          <Col>
-            <Button
-              className="ant-btn search"
-              icon={<SearchOutlined />}
-              onClick={handleSearch}
-              style={{ whiteSpace: "nowrap" }}
-            >
-              Tìm kiếm
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+            <Col>
+              <Button
+                className="ant-btn search"
+                icon={<SearchOutlined />}
+                onClick={handleSearch}
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Tìm kiếm
+              </Button>
+            </Col>
+          </Row>
+        </Form>
 
-      <Table
-        columns={columns}
-        dataSource={listPayment}
-        rowKey="id"
-        pagination={{
-          current: pagination.current,
-          pageSize: pagination.pageSize,
-          showSizeChanger: true,
-          total: totalPayment,
-        }}
-        onChange={onChangePagination}
-      />
-    </div>
+        <Table
+          columns={columns}
+          dataSource={listPayment}
+          rowKey="id"
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            showSizeChanger: true,
+            total: totalPayment,
+          }}
+          onChange={onChangePagination}
+        />
+      </div>
+    </>
   );
 };
 

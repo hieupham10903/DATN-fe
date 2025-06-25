@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../main/reducers";
 import { PaginationStateWithQuery } from "../common/common.ts";
-import { searchPayment } from "./reducers.ts";
+import { getDetailPayemnt, searchPayment } from "./reducers.ts";
 
 const PaymentHook = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,10 +33,15 @@ const PaymentHook = () => {
     );
   };
 
+  const GetDetailPayemnt = (id: string) => {
+    dispatch(getDetailPayemnt(id));
+  };
+
   return {
     GetDataSearch,
     listPayment,
     totalPayment,
+    GetDetailPayemnt,
     payment,
   };
 };
