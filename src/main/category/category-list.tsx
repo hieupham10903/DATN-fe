@@ -19,8 +19,8 @@ import {
 import { useEffect, useState } from "react";
 import { gender, role } from "../common/constant.ts";
 import {
-  DataSearchEmployee,
-  ObjectTypeEmployee,
+  DataSearchCategory,
+  ObjectTypeCategory,
 } from "../common/data-search.ts";
 import CategoryCreate from "./category-create.tsx";
 import CategoryDetail from "./category-detail.tsx";
@@ -70,7 +70,7 @@ const CategoryList = () => {
   }, [updateSuccess]);
 
   useEffect(() => {
-    if (ObjectTypeEmployee[searchField] === "select") {
+    if (ObjectTypeCategory[searchField] === "select") {
       if (searchField === "gender") {
         setOptions(
           Object.keys(gender).map((key) => ({
@@ -99,7 +99,7 @@ const CategoryList = () => {
   const handleSearch = () => {
     const searchCriteria = {
       [searchField]: {
-        [ObjectTypeEmployee[searchField] === "text" ? "contains" : "equals"]:
+        [ObjectTypeCategory[searchField] === "text" ? "contains" : "equals"]:
           searchText,
       },
     };
@@ -259,13 +259,13 @@ const CategoryList = () => {
                   value={searchField}
                   onChange={(value) => handleChangeSearch(value)}
                   style={{ width: "150" }}
-                  options={DataSearchEmployee}
+                  options={DataSearchCategory}
                 />
               </Form.Item>
             </Col>
             <Col flex="auto">
               <Form.Item>
-                {ObjectTypeEmployee[searchField] === "text" ? (
+                {ObjectTypeCategory[searchField] === "text" ? (
                   <Input
                     placeholder="Nhập từ khóa tìm kiếm"
                     value={searchText}

@@ -19,8 +19,8 @@ import {
 import { useEffect, useState } from "react";
 import { gender, role } from "../common/constant.ts";
 import {
-  DataSearchEmployee,
-  ObjectTypeEmployee,
+  DataSearchWarehouse,
+  ObjectTypeWarehouse,
 } from "../common/data-search.ts";
 import WarehouseHook from "./index.ts";
 import WarehouseCreate from "./warehouse-create.tsx";
@@ -70,7 +70,7 @@ const WarehouseList = () => {
   }, [updateSuccess]);
 
   useEffect(() => {
-    if (ObjectTypeEmployee[searchField] === "select") {
+    if (ObjectTypeWarehouse[searchField] === "select") {
       if (searchField === "gender") {
         setOptions(
           Object.keys(gender).map((key) => ({
@@ -99,7 +99,7 @@ const WarehouseList = () => {
   const handleSearch = () => {
     const searchCriteria = {
       [searchField]: {
-        [ObjectTypeEmployee[searchField] === "text" ? "contains" : "equals"]:
+        [ObjectTypeWarehouse[searchField] === "text" ? "contains" : "equals"]:
           searchText,
       },
     };
@@ -265,13 +265,13 @@ const WarehouseList = () => {
                   value={searchField}
                   onChange={(value) => handleChangeSearch(value)}
                   style={{ width: "150" }}
-                  options={DataSearchEmployee}
+                  options={DataSearchWarehouse}
                 />
               </Form.Item>
             </Col>
             <Col flex="auto">
               <Form.Item>
-                {ObjectTypeEmployee[searchField] === "text" ? (
+                {ObjectTypeWarehouse[searchField] === "text" ? (
                   <Input
                     placeholder="Nhập từ khóa tìm kiếm"
                     value={searchText}

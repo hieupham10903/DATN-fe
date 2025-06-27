@@ -67,3 +67,46 @@ export const statusOptions = [
   { value: "paid", label: "Đã trả" },
   { value: "failed", label: "Thất bại" },
 ];
+
+export const DataSearchCategory = [
+  {
+    value: "name",
+    label: "Tên danh mục",
+  },
+];
+
+export const ObjectTypeCategory = {
+  name: "text",
+};
+
+export const DataSearchWarehouse = [
+  {
+    value: "name",
+    label: "Tên kho",
+  },
+  {
+    value: "code",
+    label: "Mã kho",
+  },
+];
+
+export const ObjectTypeWarehouse = {
+  name: "text",
+  code: "text",
+};
+
+export const DataSearchProduct = [
+  {
+    value: "name",
+    label: "Tên sản phẩm",
+  },
+  {
+    value: "code",
+    label: "Mã sản phẩm",
+  },
+];
+
+export const ObjectTypeProduct = {
+  name: "text",
+  code: "text",
+};

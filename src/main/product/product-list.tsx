@@ -18,10 +18,7 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import { gender, role } from "../common/constant.ts";
-import {
-  DataSearchEmployee,
-  ObjectTypeEmployee,
-} from "../common/data-search.ts";
+import { DataSearchProduct, ObjectTypeProduct } from "../common/data-search.ts";
 import ProductHook from "./index.ts";
 import ProductCreate from "./product-create.tsx";
 import ProductDetail from "./product-detail.tsx";
@@ -79,7 +76,7 @@ const ProductList = () => {
   }, [updateSuccess]);
 
   useEffect(() => {
-    if (ObjectTypeEmployee[searchField] === "select") {
+    if (ObjectTypeProduct[searchField] === "select") {
       if (searchField === "gender") {
         setOptions(
           Object.keys(gender).map((key) => ({
@@ -108,7 +105,7 @@ const ProductList = () => {
   const handleSearch = () => {
     const searchCriteria = {
       [searchField]: {
-        [ObjectTypeEmployee[searchField] === "text" ? "contains" : "equals"]:
+        [ObjectTypeProduct[searchField] === "text" ? "contains" : "equals"]:
           searchText,
       },
     };
@@ -290,13 +287,13 @@ const ProductList = () => {
                   value={searchField}
                   onChange={(value) => handleChangeSearch(value)}
                   style={{ width: "150" }}
-                  options={DataSearchEmployee}
+                  options={DataSearchProduct}
                 />
               </Form.Item>
             </Col>
             <Col flex="auto">
               <Form.Item>
-                {ObjectTypeEmployee[searchField] === "text" ? (
+                {ObjectTypeProduct[searchField] === "text" ? (
                   <Input
                     placeholder="Nhập từ khóa tìm kiếm"
                     value={searchText}
