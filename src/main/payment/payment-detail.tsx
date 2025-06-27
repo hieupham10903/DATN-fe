@@ -42,22 +42,20 @@ function PaymentDetail({ handleCloseModal, record }) {
       title: "Tên sản phẩm",
       dataIndex: "productName",
       key: "productName",
-    },
-    {
-      title: "Mã sản phẩm",
-      dataIndex: "productId",
-      key: "productId",
+      align: "center",
     },
     {
       title: "Giá",
       dataIndex: "price",
       key: "price",
       render: (text) => `${text.toLocaleString()} đ`,
+      align: "center",
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
+      align: "center",
     },
   ];
 
