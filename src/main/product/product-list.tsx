@@ -35,6 +35,7 @@ const ProductList = () => {
     listCategory,
     ListAllWarehouse,
     listWarehouse,
+    DeleteProduct,
   } = ProductHook();
 
   const [pagination, setPagination] = useState({
@@ -222,7 +223,7 @@ const ProductList = () => {
             shape="circle"
             icon={<DeleteOutlined />}
             className="ant-btn delete"
-            onClick={() => console.log("Xóa:", record)}
+            onClick={() => DeleteProduct(record.id)}
           />
         </div>
       ),
@@ -247,6 +248,7 @@ const ProductList = () => {
         width={1500}
         visible={visibleDetail}
         footer={null}
+        destroyOnHidden
       >
         <ProductDetail
           productData={record}
@@ -261,6 +263,7 @@ const ProductList = () => {
         width={1500}
         visible={visibleUpdate}
         footer={null}
+        destroyOnHidden
       >
         <ProductUpdate
           productData={record}

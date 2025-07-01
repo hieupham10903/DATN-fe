@@ -28,6 +28,7 @@ const apiStatisticPayment = "/api/payment/payment-statistic-by-month";
 const apiGetAllProductInfo = "/api/get-all-products-info";
 const apiGetAllPayment = "/api/payment/get-all-payment-by-date";
 const apiGetTotalRevenue = "/api/payment/total-revenue";
+const apiDeleteProduct = "/api/delete-product";
 
 export const searchProduct = createAsyncThunk(
   "product/searchProduct",
@@ -168,6 +169,16 @@ export const getTotalRevenue = createAsyncThunk(
   }
 );
 
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (id: string) => {
+    const response = await axiosClient.post<any>(
+      `${apiDeleteProduct}?id=${id}`
+    );
+    return response;
+  }
+);
+
 const productReducer = createSlice({
   name: "productReducer",
   initialState,
@@ -213,6 +224,15 @@ const productReducer = createSlice({
         state.updateSuccess = false;
       })
       .addCase(updateProductWithImage.rejected, (state, action) => {
+        state.updateSuccess = false;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.updateSuccess = true;
+      })
+      .addCase(deleteProduct.pending, (state, action) => {
+        state.updateSuccess = false;
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.updateSuccess = false;
       })
       .addCase(listAllCategory.fulfilled, (state, action) => {

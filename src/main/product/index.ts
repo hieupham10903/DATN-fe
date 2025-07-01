@@ -3,6 +3,7 @@ import { AppDispatch, RootState } from "../../main/reducers";
 import { PaginationStateWithQuery } from "../common/common.ts";
 import {
   createProduct,
+  deleteProduct,
   getAllProductInfo,
   getImage,
   getListAllPayment,
@@ -350,6 +351,10 @@ const ProductHook = () => {
     return dispatch(getTotalRevenue());
   };
 
+  const DeleteProduct = (id: string) => {
+    return dispatch(deleteProduct(id));
+  };
+
   return {
     GetDataSearch,
     listProduct,
@@ -380,6 +385,7 @@ const ProductHook = () => {
     exportRevenueToExcel,
     GetTotalRevenue,
     totalRevenue,
+    DeleteProduct,
   };
 };
 export default ProductHook;

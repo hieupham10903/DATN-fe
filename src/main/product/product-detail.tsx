@@ -11,6 +11,7 @@ function ProductDetail({ productData, handleCloseModal, isReset }) {
     detailImages,
     listCategory,
     listWarehouse,
+    ResetProductState,
   } = ProductHook();
 
   const imageDetails = productData.imageDetail
@@ -18,18 +19,29 @@ function ProductDetail({ productData, handleCloseModal, isReset }) {
     : [];
 
   useEffect(() => {
-    if (productData?.imageUrl && !mainImage) {
-      GetMainImage(productData.imageUrl);
-    }
-  }, [productData?.imageUrl, isReset]);
+    ResetProductState();
+
+    const timeout = setTimeout(() => {
+      if (productData?.imageUrl) {
+        GetMainImage(productData.imageUrl);
+      }
+
+      if (productData?.imageDetail) {
+        const details = productData.imageDetail.split(",");
+        if (details.length > 0) {
+          GetDetailImages(details);
+        }
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [productData, isReset]);
 
   useEffect(() => {
     if (imageDetails.length > 0 && detailImages.length === 0) {
       GetDetailImages(imageDetails);
     }
   }, [imageDetails, isReset]);
-
-  console.log("mainImage", mainImage);
 
   return (
     <>
