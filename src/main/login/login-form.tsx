@@ -69,58 +69,6 @@ const AuthForm = () => {
               Đăng nhập
             </Button>
           </Form>
-          <div className="register-link">
-            <p>
-              Chưa có tài khoản?{" "}
-              <a onClick={() => setLoginType("register")}>Đăng ký ngay</a>
-            </p>
-          </div>
-        </Tabs.TabPane>
-
-        <Tabs.TabPane key="register" tab="Đăng ký">
-          <Form onFinish={onRegisterFinish} layout="vertical">
-            <Form.Item
-              label="Tài khoản"
-              name="username"
-              rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}
-            >
-              <Input prefix={<UserOutlined />} />
-            </Form.Item>
-            <Form.Item
-              label="Mật khẩu"
-              name="password"
-              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
-            >
-              <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
-            <Form.Item
-              label="Xác nhận mật khẩu"
-              name="confirmPassword"
-              dependencies={["password"]}
-              rules={[
-                { required: true, message: "Vui lòng xác nhận mật khẩu!" },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error("Mật khẩu không khớp!"));
-                  },
-                }),
-              ]}
-            >
-              <Input.Password prefix={<LockOutlined />} />
-            </Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block>
-              Đăng ký
-            </Button>
-          </Form>
-          <div className="login-link">
-            <p>
-              Đã có tài khoản?{" "}
-              <a onClick={() => setLoginType("login")}>Đăng nhập ngay</a>
-            </p>
-          </div>
         </Tabs.TabPane>
       </Tabs>
     </div>
