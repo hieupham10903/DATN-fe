@@ -152,6 +152,19 @@ const ProductList = () => {
     ResetProductState();
   };
 
+  const confirmDeleteProduct = (productId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk() {
+        DeleteProduct(productId);
+      },
+    });
+  };
+
   const columns: TableColumnsType = [
     {
       title: "STT",
@@ -223,7 +236,7 @@ const ProductList = () => {
             shape="circle"
             icon={<DeleteOutlined />}
             className="ant-btn delete"
-            onClick={() => DeleteProduct(record.id)}
+            onClick={() => confirmDeleteProduct(record.id)}
           />
         </div>
       ),

@@ -314,3 +314,70 @@ select.ant-select:focus {
     }
 }
 
+/* Custom Modal.confirm */
+.ant-modal-confirm {
+  border-radius: 12px !important;
+
+  .ant-modal-content {
+    padding: 24px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .ant-modal-confirm-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    .anticon {
+      font-size: 24px;
+      color: #ff9800; // Màu vàng cảnh báo
+    }
+  }
+
+  .ant-modal-confirm-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #d32f2f; // Màu đỏ cảnh báo
+  }
+
+  .ant-modal-confirm-content {
+    font-size: 16px;
+    color: #000;
+    margin-top: 4px;
+  }
+
+  .ant-modal-confirm-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 24px;
+
+    .ant-btn {
+      width: 100%;
+      height: 40px;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .ant-btn-default {
+      background-color: #c18a60; // Nâu đất
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: darken(#c18a60, 10%);
+      }
+    }
+
+    .ant-btn-dangerous {
+      background-color: #ff4d4f;
+      border: none;
+
+      &:hover {
+        background-color: #d32f2f;
+      }
+    }
+  }
+}
