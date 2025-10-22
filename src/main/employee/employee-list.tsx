@@ -28,8 +28,13 @@ import EmployeeUpdate from "./employee-update.tsx";
 import EmployeeHook from "./index.ts";
 
 const EmployeeList = () => {
-  const { GetDataSearch, listEmployee, totalEmployee, updateSuccess } =
-    EmployeeHook();
+  const {
+    GetDataSearch,
+    listEmployee,
+    totalEmployee,
+    updateSuccess,
+    DeleteEmployee,
+  } = EmployeeHook();
 
   const [pagination, setPagination] = useState({
     current: 1,
@@ -196,7 +201,7 @@ const EmployeeList = () => {
             shape="circle"
             icon={<DeleteOutlined />}
             className="ant-btn delete"
-            onClick={() => console.log("Xóa:", record)}
+            onClick={() => DeleteEmployee(record.id)}
           />
         </div>
       ),
